@@ -1,3 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.app{
+    @apply h-screen flex w-screen text-green-900 dark:text-green-50 overflow-x-hidden
+}
+.sidebar-section{
+    @apply h-screen py-8 px-4 overflow-y-auto bg-green-100 border-r border-green-300 w-64 translate-x-16 transition absolute z-40 dark:bg-zinc-800 dark:border-zinc-700 shadow 
+}
+.submenu{
+    @apply sm:scale-x-100 absolute sm:relative flex flex-col items-center w-16 h-screen py-8 space-y-8 border-r border-green-400 dark:border-zinc-700 bg-green-200 dark:bg-zinc-800 transition duration-100 origin-left z-50
+}
+.submenu-icon{
+    @apply p-1.5 text-green-600 focus:outline-none transition-colors duration-200 rounded-lg dark:text-green-50 dark:hover:bg-zinc-700 hover:bg-green-300
+}
+.submenu-toggle{
+    @apply block sm:hidden absolute bg-green-200 dark:bg-zinc-800 pl-4 pr-1.5 py-5 mt-3 h-fit rounded-r transition z-50
+}
+/* .submenu-icon-active{
+    @apply bg-green-300 dark:bg-zinc-700
+} */
+.btn{
+    @apply p-2 text-white border rounded shadow-md transition
+}
+.btn-blue{
+    @apply dark:text-blue-500 bg-blue-500 border border-blue-500 hover:text-blue-500 dark:hover:bg-blue-500  dark:bg-transparent hover:bg-transparent dark:hover:text-white 
+}
+.btn-yellow{
+    @apply dark:text-yellow-500 bg-yellow-500 border border-yellow-500 hover:text-yellow-500 dark:hover:bg-yellow-500  dark:bg-transparent hover:bg-transparent dark:hover:text-white 
+}
+.btn-green{
+    @apply dark:text-green-500 bg-green-500 border border-green-500 hover:text-green-500 dark:hover:bg-green-500  dark:bg-transparent hover:bg-transparent dark:hover:text-white 
+}
+
+.sidebar-input{
+    @apply mt-3 pl-9 p-2 text-slate-800 dark:text-white rounded shadow border dark:bg-zinc-700 border-green-300 dark:border-green-50 placeholder:text-slate-600 dark:placeholder:text-zinc-400 text-sm focus:outline-none focus:bg-green-50 dark:focus:bg-zinc-600 transition
+}
