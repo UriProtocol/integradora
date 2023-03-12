@@ -6,7 +6,7 @@ import SidebarVisualizar from "./sidebarSections/SidebarVisualizar";
 import SidebarConfig from "./sidebarSections/SidebarConfig";
 import SidebarAyuda from "./sidebarSections/SidebarAyuda";
 
-const Sidebar = () => {
+const Sidebar = ({setTheme}) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth); //Obteniendo la anchura del dispositivo
 
   //Actualizando la anchura si el dispositivo cambia de tamaño
@@ -189,7 +189,7 @@ const Sidebar = () => {
       <SidebarHome ref={home} /> {/* Sección de home */}
       <SidebarRegistrar ref={registrar} /> {/* Sección de registrar */}
       <SidebarVisualizar ref={visualizar} /> {/* Sección de visualizar */}
-      <SidebarConfig ref={config} /> {/* Sección de config */}
+      <SidebarConfig ref={config} setTheme={setTheme}/> {/* Sección de config */}
       <SidebarAyuda ref={ayuda} /> {/* Sección de ayuda */}
     </aside>
   );

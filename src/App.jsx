@@ -8,12 +8,34 @@ import RegistroPaciente from './pages/registrar/RegistroPaciente'
 import VisualizarRegistros from './pages/visualizar/VisualizarRegistros'
 import VisualizarPacientes from './pages/visualizar/VisualizarPacientes'
 
+import usePrefersColorScheme from 'use-prefers-color-scheme' //Hook para obtener el tema preferido del usuario (claro / oscuro)
+import { useEffect, useState } from 'react'
+
 function App() {
 
+  const [theme, setTheme] = useState(usePrefersColorScheme())
+
+  useEffect(() =>{
+    handleTheme()
+  }, [theme])
+
+
+  function handleTheme() {
+    if(localStorage.getItem("theme")){
+      setTheme(localStorage.getItem("theme"))
+    }
+  }
+
+
+  
+  console.log(theme)
+
   return (
-  <div className='app'>
-    <Sidebar />
-    <div className='flex justify-center items-center ml-auto flex-1 lg:flex-none lg:w-[calc(100%-20rem)] p-8'>
+  <div className={`app ${theme}`}>
+    {/* El siguiente div hace que el fondo fuera del div app se mantenga del color del fondo */}
+    <div className=' -z-50 fixed bg-green-50 dark:bg-zinc-700 h-[200vh] w-[200vw]'></div> 
+    <Sidebar setTheme={setTheme} />
+    <div className='flex justify-center items-center ml-auto flex-1 lg:flex-none w-screen lg:w-[calc(100%-20rem)] p-8 bg-green-50 dark:bg-zinc-700 text-green-900 dark:text-green-50'>
       <Routes>
         <Route index element={<Home />}/>
         <Route path='registrar'>
