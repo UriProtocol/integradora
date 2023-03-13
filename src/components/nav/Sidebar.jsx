@@ -184,7 +184,7 @@ const Sidebar = ({setTheme}) => {
   }
 
   return (
-    <aside className="flex">
+    <aside className="flex fixed z-50">
       <Submenu handleSection={handleSection} handleSubMenu={handleSubMenu} />
       <SidebarHome ref={home} /> {/* Sección de home */}
       <SidebarRegistrar ref={registrar} /> {/* Sección de registrar */}

@@ -9,7 +9,7 @@
     @apply h-screen py-8 px-4 text-center overflow-y-auto bg-green-100 border-r border-green-300 w-64 max-w-[calc(100vw-4rem)] translate-x-16 transition absolute z-40 dark:bg-zinc-800 dark:border-zinc-700 shadow text-green-900 dark:text-green-50
 }
 .submenu{
-    @apply sm:scale-x-100 absolute sm:relative flex flex-col items-center w-16 h-screen py-8 space-y-8 border-r border-green-400 dark:border-zinc-700 bg-green-200 dark:bg-zinc-800 transition duration-100 origin-left z-50
+    @apply sm:scale-x-100 flex flex-col items-center w-16 h-screen py-8 space-y-8 border-r border-green-400 dark:border-zinc-700 bg-green-200 dark:bg-zinc-800 transition duration-100 origin-left z-50
 }
 .submenu-icon{
     @apply p-1.5 text-green-600 focus:outline-none transition-colors duration-200 rounded-lg dark:text-green-50 dark:hover:bg-zinc-700 hover:bg-green-300
@@ -17,9 +17,12 @@
 .submenu-toggle{
     @apply block sm:hidden absolute bg-green-200 dark:bg-zinc-800 pl-4 pr-1.5 py-5 mt-3 h-fit rounded-r transition z-50
 }
-/* .submenu-icon-active{
-    @apply bg-green-300 dark:bg-zinc-700
-} */
+.container{
+    @apply rounded shadow-md bg-white dark:bg-zinc-800 w-11/12 sm:w-10/12 py-6 px-8
+}
+.container-title{
+    @apply text-xl sm:text-2xl md:text-3xl text-center
+}
 .btn{
     @apply p-2 text-white border-2 rounded shadow transition
 }
