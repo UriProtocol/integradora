@@ -4,11 +4,11 @@ import {BsEye, BsPen, BsTrash} from 'react-icons/bs'
 const VisualizarPacientes = () => {
   return (
     <>
-        <div className='container'>
-            <h1 className='container-title'>Lista de pacientes</h1>
+        <div className='container !py-10'>
+            <h1 className='container-title mb-5'>Lista de pacientes</h1>
             {/* <hr className='my-2 w-1/2  mx-auto'/> */}
-            <div className=' overflow-x-auto w-full mt-8'>
-                <table className=' table-auto w-full min-w-max text-center'>
+            <div className=' overflow-x-auto w-11/12 mx-auto mt-8 styled-scrollbar'>
+                <table className='table-auto rounded w-full min-w-max text-center'>
                     <thead className='border-b border-green-300 dark:border-zinc-400'>
                         <tr className='hover:bg-green-50 dark:hover:bg-zinc-700 transition text-xs sm:text-base'>
                             <th className='p-2'>Id</th>

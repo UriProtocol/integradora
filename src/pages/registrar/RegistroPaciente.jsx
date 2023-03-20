@@ -24,7 +24,7 @@ const RegistroPaciente = () => {
   return (
     <>
       <div className='container !pb-10 grid grid-cols-10'>
-        <h1 className='container-title col-span-10 mb-10'>Agregar paciente</h1>
+        <h1 className='container-title col-span-10 mb-6'>Agregar paciente</h1>
         {/* <button className='self-center justify-self-start text-3xl'><BsCaretLeft /></button> */}
         {renderedForm}
 
