@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import FormHMedica from '../../components/forms/FormHMedica'
 import FormPacienteCurricular from '../../components/forms/FormPacienteCurricular'
 import FormPacienteGeneral from '../../components/forms/FormPacienteGeneral'
+import VerificarPaciente from '../../components/forms/VerificarPaciente'
 
 const RegistroPaciente = () => {
 
@@ -19,6 +20,8 @@ const RegistroPaciente = () => {
     case 'hmedica':
       renderedForm = <FormHMedica setForm={setForm}/>
       break;
+    case 'verificar':
+      renderedForm = <VerificarPaciente setForm={setForm}/>
   }
 
   return (

@@ -2,9 +2,12 @@ import React from 'react'
 import {BsFillHeartPulseFill} from 'react-icons/bs'
 import {TbTemperatureCelsius} from 'react-icons/tb'
 import {SiOxygen} from 'react-icons/si'
+import { DateTime } from 'luxon'
 
 
 const RegistroManual = () => {
+
+  const colorScheme = localStorage.getItem('theme') //Solo para cambiar el color del calendario en input type="date"
 
   function handleSubmit(e){
     e.preventDefault()
@@ -19,7 +22,7 @@ const RegistroManual = () => {
         <div className='col-span-3 grid grid-cols-2 gap-4'>
           <div className='text-center'>
             <label>Fecha</label><br />
-            <input className='form-input w-3/4' value={new Date().toLocaleDateString()}/>
+            <input type='date' className='form-input w-3/4' style={colorScheme === 'dark' ? {colorScheme: 'dark'} : {}} value={DateTime.now().toISODate()}/>
           </div>
           <div className='text-center'>
             <label>Alumno</label><br />
@@ -41,7 +44,7 @@ const RegistroManual = () => {
           <input type='number' placeholder='37' className='form-input w-3/4'/>
         </div>
         <div className='text-center col-span-3'>
-          <label htmlFor=''>Observaciones</label> <TbTemperatureCelsius className='inline-block ml-3 text-xl'/><br />
+          <label htmlFor=''>Observaciones</label><br />
           <textarea placeholder='Observaciones' className='form-input h-16 resize-none !text-justify w-5/6 styled-scrollbar'/>
         </div>
         <div className='col-span-3 text-center'>
