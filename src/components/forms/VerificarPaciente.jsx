@@ -112,7 +112,7 @@ const VerificarPaciente = ({setForm}) => {
         <h1 className='text-2xl mb-4 text-center'>¿La información es correcta?</h1>
 
         <h2 className=' font-semibold text-lg mb-2'><MdOutlineArrowRight className='inline-block mb-1 text-xl' /> Información general</h2>
-        <p className='ml-6'><BsDash className='inline-block mb-0.5'/><b className='mr-2'>Fecha de registro: </b><input type='date' ref={fecha} className='form-input !border-none !rounded !mt-0 !py-0' style={colorScheme === 'dark' ? {colorScheme: 'dark'} : {}} value={DateTime.now().toISODate()}/></p>
+        <p className='ml-6'><BsDash className='inline-block mb-0.5'/><b className='mr-2'>Fecha de registro: </b><input type='date' ref={fecha} className='form-input !border-none !rounded !mt-0 !py-0' style={colorScheme === 'dark' ? {colorScheme: 'dark'} : {}} defaultValue={DateTime.now().toISODate()}/></p>
         <p className='ml-6'><BsDash className='inline-block mb-0.5'/> <b className=' mr-2'>Nombre completo: </b>{nombre} {apellido}</p>
         <p className='ml-6'><BsDash className='inline-block mb-0.5'/> <b className=' mr-2'>Genero: </b>{genero} <b className='ml-4 mr-2'>Edad: </b> {edad}</p>
 
