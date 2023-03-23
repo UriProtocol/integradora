@@ -4,7 +4,7 @@ import {TbTemperatureCelsius} from 'react-icons/tb'
 import {SiOxygen} from 'react-icons/si'
 import { DateTime } from 'luxon'
 
-function BarraCircular({id, name}){
+function BarraCircular({id, name, valor}){
 
   const svgStyles = {
     width: '8rem',
@@ -20,9 +20,9 @@ function BarraCircular({id, name}){
           <circle cx="50" cy="100" r="40" strokeWidth="5" />
           <circle cx="50" cy="100" r="40" strokeWidth="5" id={id} className="stroke-green-400"
           // strokeDasharray="125.6 "
+          // strokeDasharray={valor}
           strokeDasharray="252"
           />
-          <text></text>
         </g>
       </svg>
       <p className='absolute -translate-y-8 w-full'>90</p>

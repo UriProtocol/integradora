@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { BsChevronLeft, BsDash } from 'react-icons/bs'
 import {MdOutlineArrowRight} from 'react-icons/md'
 import {useNavigate} from 'react-router-dom'
 import { DateTime } from 'luxon'
+import axios from 'axios'
+import {ToastContainer, toast} from 'react-toastify'
+
 
 const initialState = {
     nombre: '',
@@ -19,11 +22,13 @@ const initialState = {
 
 const VerificarPaciente = ({setForm}) => {
 
-      const colorScheme = localStorage.getItem('theme') //Solo para cambiar el color del calendario en input type="date"
+    const colorScheme = localStorage.getItem('theme') //Para cambiar el color del calendario y del toast en input type="date"
 
     const [datos, setDatos] = useState(initialState)
 
     const navigate = useNavigate()
+
+    const fecha = useRef()
 
     useEffect(()=>{ //Obteniendo todos los datos en el sessionStorage
         const datosGeneral = JSON.parse(sessionStorage.getItem('pacienteGeneral'))
@@ -38,12 +43,61 @@ const VerificarPaciente = ({setForm}) => {
 
     }, [])
 
-    function handleSubmit(e){ //Subir la información a la base de datos con axios
-        e.preventDefault()
+    async function handleSubmit(){ //Subir la información a la base de datos con axios
+        const {nombre, apellido, genero, edad, carrera, cuatrimestre, grupo, padecimiento, medicamento, observaciones} = datos
+        const fechaVal = fecha.current.value
+        const postObj = {
+            fecha: fechaVal,
+            nombre: nombre,
+            apellido: apellido,
+            genero: genero,
+            edad: edad,
+            carrera: carrera,
+            cuatrimestre: cuatrimestre,
+            grupo: grupo,
+            padecimiento: padecimiento,
+            medicamento: medicamento,
+            observaciones: observaciones
+        }
+
+        try {
+            const response = await axios.post('http://127.0.0.1:5000/pacientes', postObj)
+            notify(response.status)
+            
+        } catch (error) {
+            console.error(error)
+            notify(500)
+        }
+
+        console.log(fechaVal)
+        console.log(datos)
+
     }
     function handleCancelar(){
         sessionStorage.clear()
         navigate('/')
+    }
+
+    function notify(num){
+        if(num >= 200 && num < 300){
+            toast.success(
+                'Registro agregado',
+                {
+                  onClose:() =>{
+                    setTimeout(() => {
+                        sessionStorage.clear()
+                        navigate('/visualizar/pacientes')
+                    }, 2000);
+                  },
+                  autoClose:500,
+                },
+      
+              )
+        }else{
+            toast.error('¡Ha ocurrido un error!',{
+                autoClose: 500
+            })
+        }
     }
 
     const {nombre, apellido, genero, edad, carrera, cuatrimestre, grupo, padecimiento, medicamento, observaciones} = datos
@@ -58,7 +112,7 @@ const VerificarPaciente = ({setForm}) => {
         <h1 className='text-2xl mb-4 text-center'>¿La información es correcta?</h1>
 
         <h2 className=' font-semibold text-lg mb-2'><MdOutlineArrowRight className='inline-block mb-1 text-xl' /> Información general</h2>
-        <p className='ml-6'><BsDash className='inline-block mb-0.5'/><b className='mr-2'>Fecha de registro: </b><input type='date' className='form-input !border-none !rounded !mt-0' style={colorScheme === 'dark' ? {colorScheme: 'dark'} : {}} value={DateTime.now().toISODate()}/></p>
+        <p className='ml-6'><BsDash className='inline-block mb-0.5'/><b className='mr-2'>Fecha de registro: </b><input type='date' ref={fecha} className='form-input !border-none !rounded !mt-0 !py-0' style={colorScheme === 'dark' ? {colorScheme: 'dark'} : {}} value={DateTime.now().toISODate()}/></p>
         <p className='ml-6'><BsDash className='inline-block mb-0.5'/> <b className=' mr-2'>Nombre completo: </b>{nombre} {apellido}</p>
         <p className='ml-6'><BsDash className='inline-block mb-0.5'/> <b className=' mr-2'>Genero: </b>{genero} <b className='ml-4 mr-2'>Edad: </b> {edad}</p>
 
@@ -77,10 +131,11 @@ const VerificarPaciente = ({setForm}) => {
 
     <div className='col-span-10 text-center mt-6'>
         <button className='btn btn-red' onClick={handleCancelar}>Cancelar</button>
-        <button className='btn btn-green !px-6 ml-6'>Subir</button>
+        <button className='btn btn-green !px-6 ml-6' onClick={handleSubmit}>Subir</button>
     </div>
 
-    <div />
+    <ToastContainer position='top-center' theme={colorScheme} />
+    
     </>
   )
 }

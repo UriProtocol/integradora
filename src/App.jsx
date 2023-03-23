@@ -8,6 +8,7 @@ import VisualizarRegistros from './pages/visualizar/VisualizarRegistros'
 import VisualizarPacientes from './pages/visualizar/VisualizarPacientes'
 import Form from './components/forms/Form'
 
+import 'react-toastify/dist/ReactToastify.css';
 import usePrefersColorScheme from 'use-prefers-color-scheme' //Hook para obtener el tema preferido del usuario (claro / oscuro)
 import { useEffect, useState } from 'react'
 
