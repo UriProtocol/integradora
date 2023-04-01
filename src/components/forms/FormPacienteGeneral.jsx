@@ -41,12 +41,12 @@ const FormPacienteGeneral = ({setForm}) => {
   return (
     <>
      <div></div>
-      <form className=" p-6 pb-8 border border-green-200 dark:border-zinc-600 rounded shadow col-span-8" onSubmit={handleSubmit}>
-        <h1 className="text-xl text-center mb-12">
+      <form className=" p-2 sm:p-6 pb-8 sm:border border-green-200 dark:border-zinc-600 rounded shadow col-span-8" onSubmit={handleSubmit}>
+        <h1 className="text-lg sm:text-xl text-center mb-12">
           Información general
         </h1>
-        <div className=" w-full grid grid-cols-2 gap-10">
-          <div className="text-center px-4">
+        <div className=" w-full grid sm:grid-cols-2 gap-10">
+          <div className="text-center px-4 col-span-2 sm:col-span-1">
             <label className=" text-center">Nombre(s): </label>
             <br />
             <input
@@ -58,7 +58,7 @@ const FormPacienteGeneral = ({setForm}) => {
               onChange={handleChange}
             />
           </div>
-          <div className="text-center px-4">
+          <div className="text-center px-4 col-span-2 sm:col-span-1">
             <label className=" text-center">Apellido(s): </label>
             <br />
             <input
@@ -70,7 +70,7 @@ const FormPacienteGeneral = ({setForm}) => {
               onChange={handleChange}
             />
           </div>
-          <div className="text-center px-4">
+          <div className="text-center px-4 col-span-2 sm:col-span-1">
             <label className=" text-center">Género: </label>
             <br />
             <select className="form-input w-3/4" name="genero" value={genero} onChange={handleChange}>
@@ -80,7 +80,7 @@ const FormPacienteGeneral = ({setForm}) => {
               <option value="Otro">Otro</option>
             </select>
           </div>
-          <div className="text-center px-4">
+          <div className="text-center px-4 col-span-2 sm:col-span-1">
             <label className=" text-center">Edad: </label>
             <br />
             <input
@@ -93,8 +93,8 @@ const FormPacienteGeneral = ({setForm}) => {
             />
           </div>
           <div className='mt-2 col-span-2 text-center'>
-              <button className='btn btn-green mx-4 !px-6' type='submit'>Aceptar</button>
-              <button className='btn btn-red mx-4 !px-6' onClick={handleCancel}>Cancelar</button>
+              {/* <button className='btn btn-green mx-4 !px-6' type='submit'>Aceptar</button> */}
+              <button className='btn btn-red mx-4 !px-6 mt-4 sm:mt-0' onClick={handleCancel}>Cancelar</button>
           </div>
         </div>
       </form>

@@ -68,13 +68,13 @@ const FormPacienteCurricular = ({setForm}) => {
       <button className="self-center justify-self-center text-4xl group" onClick={()=> handleArrowClick('left')}>
         <BsChevronLeft className=" group-hover:-translate-x-1.5 group-hover:scale-105 transition" />
       </button>
-      <form className="p-6 pb-8 border border-green-200 dark:border-zinc-600 rounded shadow col-span-8" onSubmit={handleSubmit}>
-        <h1 className="text-xl text-center mb-12">
+      <form className=" p-2 sm:p-6 pb-8 sm:border border-green-200 dark:border-zinc-600 rounded shadow col-span-8" onSubmit={handleSubmit}>
+        <h1 className="text-lg sm:text-xl text-center mb-12">
           Información curricular
         </h1>
-        <div className=" w-full grid grid-cols-2 gap-6">
+        <div className=" w-full grid sm:grid-cols-2 gap-6">
           
-          <div className="text-center px-4">
+          <div className="text-center px-4 col-span-2 sm:col-span-1">
             <label className="text-sm text-center">Carrera: </label>
             <br />
             <select className="form-input w-full" name='carrera' value={carrera} onChange={handleChange}>
@@ -82,7 +82,7 @@ const FormPacienteCurricular = ({setForm}) => {
                 {optCarreras}
             </select>
           </div>
-          <div className="text-center px-4 grid grid-cols-2 gap-8">
+          <div className="text-center px-4 grid sm:grid-cols-2 col-span-2 sm:col-span-1 gap-8">
             <div>
               <label className="text-sm text-center">Cuatrimestre: </label>
               <br />
@@ -111,8 +111,8 @@ const FormPacienteCurricular = ({setForm}) => {
             </div>
           </div>
           <div className='mt-4 col-span-2 text-center'>
-              <button className='btn btn-green mx-4 !px-6' type='submit'>Aceptar</button>
-              <button className='btn btn-red mx-4 !px-6' onClick={handleCancel}>Cancelar</button>
+              {/* <button className='btn btn-green mx-4 !px-6' type='submit'>Aceptar</button> */}
+              <button className='btn btn-red mx-4 !px-6 mt-4 sm:mt-0' onClick={handleCancel}>Cancelar</button>
           </div>
         </div>
       </form>

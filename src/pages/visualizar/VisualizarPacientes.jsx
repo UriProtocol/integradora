@@ -1,31 +1,71 @@
 import React, { useEffect, useState } from "react";
 import { BsEye, BsPen, BsTrash } from "react-icons/bs";
-import { AiOutlineLoading } from "react-icons/ai";
+import { AiOutlineLoading, AiOutlinePlus } from "react-icons/ai";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
 
 const VisualizarPacientes = () => {
+
+  const colorScheme = localStorage.getItem('theme') //Para cambiar el color del calendario y del toast en input type="date"
+
   const [pacientes, setPacientes] = useState();
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     getPacientes();
   }, []);
 
   async function getPacientes() {
-    const pacientesVal = await axios.get("http://127.0.0.1:5000/pacientes");
-    setPacientes(pacientesVal.data);
+    try {
+      const pacientesVal = await axios.get("http://127.0.0.1:5000/pacientes");
+      setPacientes(pacientesVal.data);
+    } catch (error) {
+      console.error(error)
+    }
   }
 
+  async function handleEliminar(id){
+    console.log(id)
+    try {
+      const eliminarPaciente = await axios.delete(`http://127.0.0.1:5000/pacientes/eliminar/${id}`)
+      notify(eliminarPaciente.status)
+      getPacientes()
+    } catch (error) {
+      console.error(error)
+      notify(500)
+    }
+  }
+
+  function notify(num){
+    if(num >= 200 && num < 300){
+        toast.warning(
+            'Paciente eliminado',
+            {
+              autoClose:500,
+            },
+  
+          )
+    }else{
+        toast.error('¡Ha ocurrido un error!',{
+            autoClose: 500
+        })
+    }
+}
+
   const tableRows = pacientes ? pacientes.map(p => (
-    <tr>
-       <td className="py-2">{p.nombre}</td> 
-       <td className="py-2">{p.apellido}</td> 
-       <td className="py-2">{p.edad}</td> 
-       <td className="py-2">{p.carrera}</td> 
-       <td className="py-2">{p.cuatrimestre ? p.cuatrimestre + ' °' : ''} {p.grupo}</td> 
+    <tr className="hover:bg-green-50 dark:hover:bg-zinc-700 transition text-sm sm:text-base" key={p._id}>
+       <td className="py-2">{p.nombre ? p.nombre : '. . .'}</td> 
+       <td className="py-2">{p.apellido ? p.apellido : '. . .'}</td> 
+       <td className="py-2">{p.edad ? p.edad : '. . .'}</td> 
+       <td className="py-2">{p.carrera ? p.carrera : '. . .'}</td> 
+       <td className="py-2">{p.cuatrimestre ? p.cuatrimestre + ' °' : '. . .'} {p.grupo}</td> 
        <td className="py-2">
-        <button className='btn btn-red m-2'><BsTrash /></button>
-        <button className='btn btn-teal m-2'><BsEye /></button>
-        <button className='btn btn-blue m-2'><BsPen /></button>
+        <button className='btn btn-red m-2' onClick={() => handleEliminar(p._id)}><BsTrash /></button>
+        <button className='btn btn-teal m-2' onClick={() => navigate(`/ver/paciente/${p._id}`)}><BsEye /></button>
+        <button className='btn btn-blue m-2' onClick={()=> navigate(`/modificar/paciente/${p._id}`)}><BsPen /></button>
        </td>
     </tr>
   )) : (
@@ -38,8 +78,11 @@ const VisualizarPacientes = () => {
 
   return (
     <>
-      <div className="container !py-10">
+      <div className="container !py-10 ">
         <h1 className="container-title mb-5">Lista de pacientes</h1>
+        <div className="w-11/12 mx-auto flex justify-end">
+          <button className="absolute btn btn-green text-lg sm:text-xl md:text-2xl -translate-y-4" onClick={()=> navigate('/registrar/paciente')}><AiOutlinePlus /></button>
+        </div>
         {/* <hr className='my-2 w-1/2  mx-auto'/> */}
         <div className=" overflow-x-auto w-11/12 mx-auto mt-8 styled-scrollbar">
           <table className="table-auto rounded w-full min-w-max text-center">
@@ -58,6 +101,7 @@ const VisualizarPacientes = () => {
             </tbody>
           </table>
         </div>
+        <ToastContainer theme={colorScheme} position="top-center" />
       </div>
     </>
   );

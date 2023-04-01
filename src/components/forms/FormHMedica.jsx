@@ -49,13 +49,13 @@ const FormHMedica = ({setForm}) => {
       <button className="self-center justify-self-center text-4xl group" onClick={()=> handleArrowClick('left')}>
         <BsChevronLeft className=" group-hover:-translate-x-1.5 group-hover:scale-105 transition"/>
       </button>
-      <form className="p-6 pb-8 border border-green-200 dark:border-zinc-600 rounded shadow col-span-8" onSubmit={handleSubmit}>
-        <h1 className="text-xl text-center mb-12">
+      <form className="p-2 sm:p-6 pb-8 sm:border border-green-200 dark:border-zinc-600 rounded shadow col-span-8" onSubmit={handleSubmit}>
+        <h1 className="text-lg sm:text-xl text-center mb-12">
           Historia médica
         </h1>
         <div className=" w-full grid grid-cols-2 gap-10">
           
-          <div className="text-center px-4">
+          <div className="text-center px-4 col-span-2 sm:col-span-1">
             <label className="text-sm text-center">Padecimiento: </label>
             <br />
             <input
@@ -67,7 +67,7 @@ const FormHMedica = ({setForm}) => {
               onChange={handleChange}
             />
           </div>
-          <div className="text-center px-4">
+          <div className="text-center px-4 col-span-2 sm:col-span-1">
             <label className="text-sm text-center">Medicamento: </label>
             <br />
             <input
@@ -91,8 +91,8 @@ const FormHMedica = ({setForm}) => {
             />
           </div>
           <div className='mt-2 col-span-2 text-center'>
-              <button className='btn btn-green mx-4 !px-6' type='submit'>Aceptar</button>
-              <button className='btn btn-red mx-4 !px-6' onClick={handleCancel}>Cancelar</button>
+              {/* <button className='btn btn-green mx-4 !px-6' type='submit'>Aceptar</button> */}
+              <button className='btn btn-red mx-4 !px-6 mt-4 sm:mt-0' onClick={handleCancel}>Cancelar</button>
           </div>
         </div>
       </form>

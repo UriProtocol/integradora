@@ -6,11 +6,13 @@ import RegistroAutomatico from './pages/registrar/RegistroAutomatico'
 import RegistroPaciente from './pages/registrar/RegistroPaciente'
 import VisualizarRegistros from './pages/visualizar/VisualizarRegistros'
 import VisualizarPacientes from './pages/visualizar/VisualizarPacientes'
-import Form from './components/forms/Form'
 
 import 'react-toastify/dist/ReactToastify.css';
 import usePrefersColorScheme from 'use-prefers-color-scheme' //Hook para obtener el tema preferido del usuario (claro / oscuro)
 import { useEffect, useState } from 'react'
+import VerPaciente from './pages/visualizar/ver/VerPaciente'
+import VerRegistro from './pages/visualizar/ver/VerRegistro'
+import ModificarPaciente from './pages/visualizar/modificar/ModificarPaciente'
 
 function App() {
 
@@ -46,10 +48,16 @@ function App() {
           <Route path='paciente' element={<RegistroPaciente />}/>
         </Route>
         <Route path='visualizar'>
-          <Route path='registros' element={<VisualizarRegistros />}></Route>
-          <Route path='pacientes' element={<VisualizarPacientes />}></Route>
+          <Route path='registros' element={<VisualizarRegistros />}/>
+          <Route path='pacientes' element={<VisualizarPacientes />}/>
         </Route>
-        <Route path='form' element={<Form />} />
+        <Route path='ver'>
+          <Route path='paciente/:id' element={<VerPaciente />}/>
+          <Route path='registro/:id' element={<VerRegistro />}/>
+        </Route>
+        <Route path='modificar'>
+          <Route path='paciente/:id' element={<ModificarPaciente />} />
+        </Route>
       </Routes>
     </div>
   </div>

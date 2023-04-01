@@ -1,7 +1,10 @@
 import React, { createRef } from "react";
 import {AiOutlineHome, AiOutlineForm, AiOutlineEye, AiOutlineSetting, AiOutlineQuestionCircle, AiOutlinePlusCircle} from 'react-icons/ai'
+import { useNavigate } from "react-router-dom";
 
 const Submenu = ({handleSection, handleSubMenu}) => {
+
+    const navigate = useNavigate()
 
     const subMenu = createRef()
     const subMenuToggle = createRef()
@@ -12,25 +15,26 @@ const Submenu = ({handleSection, handleSubMenu}) => {
     const configIcon = createRef()
     const ayudaIcon = createRef()
 
-    const iconList = [homeIcon, registrarIcon, visualizarIcon, configIcon, ayudaIcon]
+    const iconList = [ registrarIcon, visualizarIcon, configIcon, ayudaIcon]
 
 
   return (
     <>
       <div className="submenu -translate-x-full sm:translate-x-0" ref={subMenu}>
        
-        <AiOutlinePlusCircle className=" text-3xl text-green-600 dark:text-green-200"/>
+        <AiOutlinePlusCircle className=" text-3xl text-green-600 dark:text-green-200 cursor-pointer" onClick={()=> navigate('/')}/>
         <small className=" text-xs !mt-2 text-green-600 dark:text-green-200 font-semibold">Medifiles</small>
 
 
-        <button
+        {/* <button
           className="submenu-icon sm:bg-green-300 sm:dark:bg-zinc-700"
-          onClick={() => handleSection('home', homeIcon, iconList)}
+          // onClick={() => handleSection('home', homeIcon, iconList)}
+          onClick={()=> navigate('/')}
           ref={homeIcon}
         >
           <AiOutlineHome className="text-2xl"/>
 
-        </button>
+        </button> */}
 
         <button
           className="submenu-icon"
