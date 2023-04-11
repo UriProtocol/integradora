@@ -34,9 +34,14 @@ function RegistroCard({nombre, oximetria, frecuencia, temperatura, fecha, id, ha
   )
 }
 
-const VisualizarRegistros = () => {
+function VisualizarRegistros() {
 
   const [registros, setRegistros] = useState()
+  const [buscar, setBuscar] = useState({
+    buscarTipo: 'nombre',
+    buscarValor: ''
+  })
+  const [visualizarRegistros, setVisualizarRegistros] = useState(localStorage.getItem('visualizarRegistros'))
 
   const colorScheme = localStorage.getItem('theme') //Para cambiar el color del calendario y del toast en input type="date"
 
@@ -44,7 +49,11 @@ const VisualizarRegistros = () => {
 
   useEffect(() => {
     getRegistros()
-    
+    setVisualizar()
+    window.addEventListener('click', setVisualizar) //No es la manera más eficiente de hacerlo, pero ya que no encontré otra manera, cada vez que se haga click en la página se ejecutará la función setVisualizar que cambiará el tipo de visualización si hacemos click en el botón de la configuración
+    return () =>{
+      window.removeEventListener('click', setVisualizar)
+    }
   }, [])
 
   async function getRegistros(){
@@ -77,33 +86,109 @@ const VisualizarRegistros = () => {
             autoClose: 500
         })
     }
-}
+  }
 
-  const registrosCards = registros 
-  ? registros.map(r => (
-    <RegistroCard key={r._id} nombre={r.alumno} oximetria={r.oximetria} frecuencia={r.frecuencia} fecha={r.fecha} id={r._id} handleEliminar={handleEliminar}/>
-  ))
+  function handleChange(e){
+    const {value} = e.target
+    setBuscar({...buscar, buscarValor: value.toLowerCase()})
+  }
+  function handleBuscarToggle(){
+    buscarTipo === 'nombre' ? setBuscar({...buscar, buscarTipo: 'apellido'}) : setBuscar({...buscar, buscarTipo: 'nombre'})
+  }
+  function setVisualizar(){
+    setVisualizarRegistros(localStorage.getItem('visualizarRegistros'))
+    console.log('hola')
+  }
+
+  const {buscarTipo, buscarValor} = buscar
+
+  const registrosCards = registros //Si se pueden obtener los registros, se muestran, si no, se muestra la animación de carga
+  ?  
+    buscarTipo === 'nombre'
+    ? registros.filter(reg => reg.nombre.toLowerCase().includes(buscarValor)).reverse().map(r => <RegistroCard key={r._id} nombre={`${r.nombre} ${r.apellido}`} oximetria={r.oximetria} frecuencia={r.frecuencia} fecha={r.fecha} id={r._id} handleEliminar={handleEliminar}/>  //El reverse se agrega para que se muestren los registros en orden del más actual al más viejo
+    )
+    : registros.filter(reg => reg.apellido.toLowerCase().includes(buscarValor)).reverse().map(r => <RegistroCard key={r._id} nombre={`${r.nombre} ${r.apellido}`} oximetria={r.oximetria} frecuencia={r.frecuencia} fecha={r.fecha} id={r._id} handleEliminar={handleEliminar}/>
+    )
+
   : <div className='h-full w-full grid justify-center items-center'>
       <AiOutlineLoading className=" text-center text-7xl animate-spin inline-block -mt-20" />
     </div> 
-  
+
+  const registrosRows = registros
+  ? <div>
+
+    </div>
+
+  :  <tr>
+      <td className="py-14 text-center" colSpan="100%">
+        <AiOutlineLoading className=" text-center text-6xl animate-spin inline-block" />
+      </td>
+    </tr>
 
   return (
     <>
-      <div className='container h-5/6'>
-        <h1 className='container-title'>Historial de registros</h1>
-        <div className='w-full sm:w-3/4 overflow-y-auto snap-y h-4/5 sm:h-3/4 mx-auto mt-8 rounded bg-green-100 dark:bg-zinc-900 scrollbar-thin scrollbar-thumb-green-400 dark:scrollbar-thumb-zinc-700 relative'>
-          
-          <div className='top-0 left-0 sticky group w-full sm:w-1/2 h-14'>
-            <input className='form-input !border-none !pl-10 !bg-green-300 dark:!bg-zinc-700 placeholder:!text-green-700 dark:placeholder:!text-zinc-200 !mt-0 border-r !rounded-r-none !rounded-br opacity-50 hover:opacity-100 focus:opacity-100 -translate-y-7 group-hover:translate-y-0 group-active:translate-y-0 focus:translate-y-0 peer !duration-200 absolute !w-full' placeholder='Buscar'/>
-            <BsSearch className='absolute ml-3 mt-2.5 z-10 opacity-50 -translate-y-8 group-hover:translate-y-0 peer-focus:translate-y-0 peer-focus:opacity-100 group-hover:opacity-100 transition !duration-200'/>
-          </div>
-          <button className='btn btn-green absolute right-0 mr-4 -mt-4 text-lg sm:text-xl md:text-2xl' onClick={()=> navigate('/registrar/manual')}><AiOutlinePlus /></button>
-            {registrosCards}
+      {visualizarRegistros === 'tabla' 
+      ? //Contenido que se renderizará si el tipo de visualización es tabla
+        <div className="container !py-10 ">
+          <h1 className="container-title mb-5">Historial de registros</h1>
+          <div className="w-11/12 mx-auto flex justify-between mt-8">
 
+            <div className='w-3/4 md:w-1/2 justify-self-start'>
+              <input className='form-input !border-none !rounded-b !pl-10 !bg-green-200 dark:!bg-zinc-700 placeholder:!text-green-700 dark:placeholder:!text-zinc-200 !mt-0 opacity-50 hover:opacity-100 focus:opacity-100 !duration-200 !w-full' 
+              placeholder={buscarTipo === 'nombre' ? 'Buscar por nombre' : 'Buscar por apellido'} 
+              value={buscarValor}
+              onChange={handleChange}
+              />
+              <button className='absolute ml-3 z-10 opacity-50 -translate-y-[1.625rem] peer-focus:opacity-100 transition !duration-200 flex' onClick={handleBuscarToggle}>
+                <BsSearch/>
+                <p className='ml-1.5 -mt-[0.285rem]'>{buscarTipo === 'nombre' ? 'N' : 'A'}</p>
+              </button>
+            </div>
+
+            <button className=" btn btn-green text-lg sm:text-xl md:text-2xl" onClick={()=> navigate('/registrar/paciente')}><AiOutlinePlus /></button>
+          </div>
+          {/* <hr className='my-2 w-1/2  mx-auto'/> */}
+          <div className=" overflow-x-auto w-11/12 mx-auto mt-4 styled-scrollbar">
+
+            <table className="table-auto rounded w-full min-w-max text-center">
+              <thead className="border-b border-green-300 dark:border-zinc-400">
+                <tr className="hover:bg-green-50 dark:hover:bg-zinc-700 transition text-xs sm:text-base">
+                  <th className="p-2">Nombre</th>
+                  <th className="p-2">Apellido</th>
+                  <th className="p-2">Oximetría</th>
+                  <th className="p-2">Frecuencia</th>
+                  <th className="p-2">Fecha</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* {pacientesRows} */}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      : //Contenido que se renderizará si el tipo de visualización es tarjetas
+        <div className='container h-5/6'> 
+          <h1 className='container-title'>Historial de registros</h1>
+          <div className='w-full sm:w-3/4 overflow-y-auto snap-y h-4/5 sm:h-3/4 mx-auto mt-8 rounded bg-green-100 dark:bg-zinc-900 scrollbar-thin scrollbar-thumb-green-400 dark:scrollbar-thumb-zinc-700 relative'>
+            
+            <div className='top-0 left-0 sticky group w-full sm:w-1/2 h-14'>
+              <input className='form-input !border-none !pl-10 !bg-green-300 dark:!bg-zinc-700 placeholder:!text-green-700 dark:placeholder:!text-zinc-200 !mt-0 !rounded-r-none !rounded-br opacity-50 hover:opacity-100 focus:opacity-100 -translate-y-7 group-hover:translate-y-0 group-active:translate-y-0 focus:translate-y-0 peer !duration-200 !w-full' 
+              placeholder={buscarTipo === 'nombre' ? 'Buscar por nombre' : 'Buscar por apellido'} 
+              value={buscarValor}
+              onChange={handleChange}/>
+              <button className='absolute ml-3 -mt-[1.625rem] z-10 opacity-50 -translate-y-8 group-hover:translate-y-0 peer-focus:translate-y-0 peer-focus:opacity-100 group-hover:opacity-100 transition !duration-200 flex'
+              onClick={handleBuscarToggle}>
+                <BsSearch/>
+                <p className='ml-1.5 -mt-[0.285rem]'>{buscarTipo === 'nombre' ? 'N' : 'A'}</p>
+              </button>
+            </div>
+            <button className='btn btn-green absolute right-0 mr-4 -mt-4 text-lg sm:text-xl md:text-2xl' onClick={()=> navigate('/registrar/manual')}><AiOutlinePlus /></button>
+              {registrosCards}
+          </div>
+        </div>
+      }
       <ToastContainer theme={colorScheme} position="top-center"/>
+      
     </>
   )
 }

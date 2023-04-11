@@ -43,7 +43,8 @@ const RegistroManual = () => {
     const {fecha, alumno, oximetria, frecuencia, observaciones} = datos
     const postObj = {
       fecha: fecha,
-      alumno: alumno,
+      nombre: alumno.split('-')[0],
+      apellido: alumno.split('-')[1],
       oximetria: oximetria,
       frecuencia: frecuencia,
       observaciones: observaciones
@@ -91,7 +92,7 @@ const RegistroManual = () => {
 
   const alumnosOpc = alumnos 
   ? alumnos.map(a => (
-    <option key={a._id} value={`${a.nombre} ${a.apellido}`}>{`${a.nombre} ${a.apellido}`}</option>
+    <option key={a._id} value={`${a.nombre}-${a.apellido}`}> {`${a.nombre} ${a.apellido}`}</option> //El guion entre el nombre y el apellido nos sirve para separarlos a la hora de enviar los datos
   ))
   : <option value="">----</option>
 
