@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, {useState, useEffect} from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ToastContainer, toast } from "react-toastify";
+import ModalEliminar from '../../../components/modals/ModalEliminar';
 
 const initialState = {
     _id: "",
@@ -25,6 +26,13 @@ const VerPaciente = () => {
     const {id} = useParams()
 
     const [paciente, setPaciente] = useState(initialState)
+    const [modal, setModal] = useState({
+      tipo: '',
+      isActive: false,
+      id: '',
+      nombre: '',
+      fecha: ''
+    })
 
     const navigate = useNavigate()
     
@@ -69,6 +77,15 @@ const VerPaciente = () => {
             })
         }
     }
+    function handleModal(tipo = '', nombre = '', fecha = '', id = ''){
+      setModal({
+        isActive: true,
+        tipo: tipo,
+        nombre: nombre,
+        fecha: fecha,
+        id: id
+      })
+    }
 
     const { fecha, nombre, apellido, genero, edad, carrera, cuatrimestre, grupo, padecimiento, medicamento, observaciones} = paciente
 
@@ -93,14 +110,13 @@ const VerPaciente = () => {
             </div>
             <div className='mt-6 flex justify-center gap-6'>
                 <button className='btn btn-slate !px-3' onClick={()=> navigate('/visualizar/pacientes')}>Volver</button>
-                <button className='btn btn-red' onClick={handleEliminar}>Eliminar</button>
+                <button className='btn btn-red' onClick={() => handleModal('paciente', `${nombre} ${apellido}`)}>Eliminar</button>
                 <button className='btn btn-blue' onClick={()=> navigate(`/modificar/paciente/${id}`)}>Modificar</button>
             </div>
-            {/* {Object.entries(paciente).map(([k, v])=>{
-                return <p><b>{k}:</b> {v}</p>
-            })} */}
         </div>
+
         <ToastContainer theme={colorScheme} position="top-center" />
+        <ModalEliminar isActive={modal.isActive} handleEliminar={handleEliminar} setModal={setModal} tipo={modal.tipo} nombre={modal.nombre} fecha={modal.fecha} id={id} />
     </>
   )
 }
