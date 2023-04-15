@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import {toast, ToastContainer} from 'react-toastify'
+import ModalModificar from '../../../components/modals/ModalModificar'
 
 
 const initialState = {
@@ -26,6 +27,10 @@ const ModificarPaciente = () => {
     const {id} = useParams()
 
     const [paciente, setPaciente] = useState(initialState)
+    const [modal, setModal] = useState({
+      nombre: '',
+      isActive: false
+    })
 
     const navigate = useNavigate()
     
@@ -42,18 +47,18 @@ const ModificarPaciente = () => {
         }
     }
 
-    async function handleEliminar(){
-        try {
-          const eliminarPaciente = await axios.delete(`http://127.0.0.1:5000/pacientes/eliminar/${id}`)
-          notify(eliminarPaciente.status)
-          setTimeout(() => {
-            navigate('/visualizar/pacientes')
-          }, 1500);
-        } catch (error) {
-          console.error(error)
-          notify(500)
-        }
-      }
+    // async function handleEliminar(){
+    //     try {
+    //       const eliminarPaciente = await axios.delete(`http://127.0.0.1:5000/pacientes/eliminar/${id}`)
+    //       notify(eliminarPaciente.status)
+    //       setTimeout(() => {
+    //         navigate('/visualizar/pacientes')
+    //       }, 1500);
+    //     } catch (error) {
+    //       console.error(error)
+    //       notify(500)
+    //     }
+    //   }
 
       async function handleSubmit(e){
         e.preventDefault()
@@ -106,6 +111,12 @@ const ModificarPaciente = () => {
             })
         }
     }
+    function handleModal(nombre = ''){
+      setModal({
+        isActive: true,
+        nombre: nombre,
+      })
+    }
 
     const { fecha, nombre, apellido, genero, edad, carrera, cuatrimestre, grupo, padecimiento, medicamento, observaciones} = paciente
 
@@ -130,12 +141,13 @@ const ModificarPaciente = () => {
                 </div>
                 <div className='mt-6 flex justify-center gap-6'>
                     <button className='btn btn-slate !px-3' type='button' onClick={()=> navigate('/visualizar/pacientes')}>Volver</button>
-                    <button className='btn btn-red' type='button' onClick={handleEliminar}>Eliminar</button>
-                    <button className='btn btn-green !px-3' type='submit'>Aceptar</button>
+                    {/* <button className='btn btn-red' type='button' onClick={handleEliminar}>Eliminar</button> */}
+                    <button className='btn btn-blue !px-3' type='button' onClick={() => handleModal(nombre)}>Modificar</button>
                 </div>      
             </form>
         </div>
         <ToastContainer theme={colorScheme} position="top-center"/>
+        <ModalModificar handleSubmit={handleSubmit} isActive={modal.isActive} nombre={modal.nombre} setModal={setModal}/>
     </>
   )
 }
