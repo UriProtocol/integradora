@@ -4,14 +4,14 @@ import {BsMoon, BsSun, BsSearch} from 'react-icons/bs'
 
 const SidebarConfig = forwardRef((props, ref) => {
 
-  useEffect(() =>{
-    handleVisualizar()
-  }, [])
+  // useEffect(() =>{
+  //   handleVisualizar()
+  // }, [])
 
   const isDarkMode = localStorage.getItem('theme') === 'dark'
   const [visualizar, setVisualizar] = useState({ //Variable de estado que almacena el tipo de visualización de pacientes y registros (tabla o tarjetas)
-    visualizarPacientes: 'tabla',
-    visualizarRegistros: 'tarjetas'
+    visualizarPacientes: localStorage.getItem('visualizarPacientes') || 'tabla',
+    visualizarRegistros: localStorage.getItem('visualizarRegistros') || 'tarjetas'
   })
 
   const {visualizarPacientes, visualizarRegistros} = visualizar
@@ -19,22 +19,6 @@ const SidebarConfig = forwardRef((props, ref) => {
   function handleThemeToggle(theme){
     props.setTheme(theme)
     localStorage.setItem('theme', theme)
-  }
-
-  function handleVisualizar(){ //Función para definir el tipo de visualización por defecto de pacientes y registros si no está ya definido
-    if(localStorage.getItem('visualizarPacientes')){
-      setVisualizar({...visualizar, visualizarPacientes: localStorage.getItem('visualizarPacientes')})
-    }else{
-      localStorage.setItem('visualizarRegistros', visualizarRegistros)
-      localStorage.setItem('visualizarPacientes', visualizarPacientes)
-    }
-    
-    if(localStorage.getItem('visualizarRegistros')){
-      setVisualizar({...visualizar, visualizarRegistros: localStorage.getItem('visualizarRegistros')})
-    }else{
-      localStorage.setItem('visualizarRegistros', visualizarRegistros)
-      localStorage.setItem('visualizarPacientes', visualizarPacientes)
-    }
   }
 
   function handleVisualizarToggle(tipoInformacion, tipoVisualizacion){
