@@ -3,11 +3,13 @@ import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import {toast, ToastContainer} from 'react-toastify'
 import axios from 'axios'
+import ModalEliminar from '../../../components/modals/ModalEliminar'
 
 const initialState = {
   _id: "",
   fecha: "",
-  alumno: "",
+  nombre: "",
+  apellido: "",
   oximetria: "",
   frecuencia: "",
   observaciones: "",
@@ -20,6 +22,13 @@ const VerRegistro = () => {
   const {id} = useParams()
 
   const [registro, setRegistro] = useState(initialState)
+  const [modal, setModal] = useState({
+    tipo: '',
+    isActive: false,
+    id: '',
+    nombre: '',
+    fecha: ''
+  })
 
   const navigate = useNavigate()
   
@@ -64,26 +73,39 @@ const VerRegistro = () => {
           })
       }
   }
+  function handleModal(tipo = '', nombre = '', fecha = '', id = ''){
+    setModal({
+      isActive: true,
+      tipo: tipo,
+      nombre: nombre,
+      fecha: fecha,
+      id: id
+    })
+  }
 
-  const {fecha, alumno, oximetria, frecuencia, observaciones} = registro
+  const {fecha, nombre, apellido, oximetria, frecuencia, observaciones} = registro
+
+
 
   return (
     <>
       <div className='container'>
-      <h2 className='container-title mb-6'>{alumno ? alumno : '. . .'}</h2>
+      <h2 className='container-title mb-6'>{nombre ? nombre : '. . . '} {apellido ? apellido : '. . .'}</h2>
             <div className='sm:border border-green-200 dark:border-zinc-600 shadow rounded p-6 w-11/12 mx-auto'> 
                 <p className='my-2 text-lg'><b className='mr-2'>Fecha de registro:</b> {fecha ? fecha : '. . .'}</p>
-                <p className='my-2 text-lg'><b className='mr-2'>Nombre del alumno:</b> {alumno ? alumno : '. . .'}</p>
+                <p className='my-2 text-lg'><b className='mr-2'>Nombre :</b> {nombre ? nombre : '. . .'}</p>
+                <p className='my-2 text-lg'><b className='mr-2'>Apellido :</b> {apellido ? apellido : '. . .'}</p>
                 <p className='my-2 text-lg'><b className='mr-2'>Oximetría:</b> {oximetria ? oximetria : '. . .'}</p>
                 <p className='my-2 text-lg'><b className='mr-2'>Frecuencia:</b> {frecuencia ? frecuencia : '. . .'}</p>
                 <p className='my-2 text-lg'><b className='mr-2'>Observaciones:</b> {observaciones ? observaciones : '. . .'}</p>
             </div>
             <div className='mt-6 flex justify-center gap-6'>
                 <button className='btn btn-slate !px-3' onClick={()=> navigate('/visualizar/registros')}>Volver</button>
-                <button className='btn btn-red' onClick={handleEliminar}>Eliminar</button>
+                <button className='btn btn-red' onClick={() => handleModal('registro', `${nombre} ${apellido}`, fecha)}>Eliminar</button>
             </div>
       </div>
       <ToastContainer theme={colorScheme} position="top-center" />
+      <ModalEliminar isActive={modal.isActive} handleEliminar={handleEliminar} setModal={setModal} tipo={modal.tipo} nombre={modal.nombre} fecha={modal.fecha} id={id} />
     </>
   )
 }
