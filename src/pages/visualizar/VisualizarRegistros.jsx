@@ -1,19 +1,20 @@
 import React, {useState, useEffect} from 'react'
-import {BsFillHeartPulseFill, BsSearch} from 'react-icons/bs'
+import {BsFillHeartPulseFill, BsSearch, BsTrash, BsEye} from 'react-icons/bs'
 import {TbTemperatureCelsius} from 'react-icons/tb'
 import { AiOutlineLoading, AiOutlinePlus } from 'react-icons/ai'
 import {SiOxygen} from 'react-icons/si'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
+import ModalEliminar from '../../components/modals/ModalEliminar'
 
-function RegistroCard({nombre, oximetria, frecuencia, temperatura, fecha, id, handleEliminar}){
+function RegistroCard({nombre, apellido, oximetria, frecuencia, temperatura, fecha, id, handleModal}){
 
   const navigate = useNavigate()
 
   return (
     <div className='p-4 rounded shadow w-3/4 mx-auto my-10 bg-white dark:bg-zinc-800 snap-center'>
-      <h1 className='text-xl font-semibold text-center'>{nombre ? nombre: '. . .'}</h1>
+      <h1 className='text-xl font-semibold text-center'>{nombre ? nombre: '. . . '} {apellido ? apellido : '. . .'}</h1>
       <div className='grid sm:grid-cols-2 gap-4 mt-6 text-center'>
         <p className='col-span-2 sm:col-span-1'>Oximetría<br />
           <SiOxygen className=' text-xl inline-block mb-1 mr-1'/> : {oximetria ? oximetria : '. . .'}
@@ -27,7 +28,7 @@ function RegistroCard({nombre, oximetria, frecuencia, temperatura, fecha, id, ha
         <p className='text-center text-lg col-span-2 mt-4'>{fecha ? fecha : '. . .'}</p>
       </div>
       <div className='text-center mt-6 flex justify-center gap-6'>
-        <button className='btn btn-red' onClick={() => handleEliminar(id)}>Eliminar</button>
+        <button className='btn btn-red' onClick={() => handleModal('registro', `${nombre} ${apellido}`, fecha, id)}>Eliminar</button>
         <button className='btn btn-teal !px-5' onClick={() => navigate(`/ver/registro/${id}`)}>Ver</button>
       </div>
     </div>
@@ -42,6 +43,13 @@ function VisualizarRegistros() {
     buscarValor: ''
   })
   const [visualizarRegistros, setVisualizarRegistros] = useState(localStorage.getItem('visualizarRegistros'))
+  const [modal, setModal] = useState({
+    tipo: '',
+    isActive: false,
+    id: '',
+    nombre: '',
+    fecha: ''
+  })
 
   const colorScheme = localStorage.getItem('theme') //Para cambiar el color del calendario y del toast en input type="date"
 
@@ -97,7 +105,15 @@ function VisualizarRegistros() {
   }
   function setVisualizar(){
     setVisualizarRegistros(localStorage.getItem('visualizarRegistros'))
-    console.log('hola')
+  }
+  function handleModal(tipo = '', nombre = '', fecha = '', id = ''){
+    setModal({
+      isActive: true,
+      tipo: tipo,
+      nombre: nombre,
+      fecha: fecha,
+      id: id
+    })
   }
 
   const {buscarTipo, buscarValor} = buscar
@@ -105,9 +121,9 @@ function VisualizarRegistros() {
   const registrosCards = registros //Si se pueden obtener los registros, se muestran, si no, se muestra la animación de carga
   ?  
     buscarTipo === 'nombre'
-    ? registros.filter(reg => reg.nombre.toLowerCase().includes(buscarValor)).reverse().map(r => <RegistroCard key={r._id} nombre={`${r.nombre} ${r.apellido}`} oximetria={r.oximetria} frecuencia={r.frecuencia} fecha={r.fecha} id={r._id} handleEliminar={handleEliminar}/>  //El reverse se agrega para que se muestren los registros en orden del más actual al más viejo
+    ? registros.filter(reg => reg.nombre.toLowerCase().includes(buscarValor)).reverse().map(r => <RegistroCard key={r._id} nombre={r.nombre} apellido={r.apellido} oximetria={r.oximetria} frecuencia={r.frecuencia} fecha={r.fecha} id={r._id} handleModal={handleModal}/>  //El reverse se agrega para que se muestren los registros en orden del más actual al más viejo
     )
-    : registros.filter(reg => reg.apellido.toLowerCase().includes(buscarValor)).reverse().map(r => <RegistroCard key={r._id} nombre={`${r.nombre} ${r.apellido}`} oximetria={r.oximetria} frecuencia={r.frecuencia} fecha={r.fecha} id={r._id} handleEliminar={handleEliminar}/>
+    : registros.filter(reg => reg.apellido.toLowerCase().includes(buscarValor)).reverse().map(r => <RegistroCard key={r._id} nombre={r.nombre} apellido={r.apellido} oximetria={r.oximetria} frecuencia={r.frecuencia} fecha={r.fecha} id={r._id} handleModal={handleModal}/>
     )
 
   : <div className='h-full w-full grid justify-center items-center'>
@@ -115,10 +131,32 @@ function VisualizarRegistros() {
     </div> 
 
   const registrosRows = registros
-  ? <div>
+  ?
+    buscarTipo === 'nombre'
+    ? registros.filter(reg => reg.nombre.toLowerCase().includes(buscarValor)).reverse().map(r => 
+        <tr className="hover:bg-green-50 dark:hover:bg-zinc-700 transition text-sm sm:text-base" key={r._id}>
+          <td className='py-2'>{r.nombre ? r.nombre : '. . .'}</td>
+          <td className='py-2'>{r.apellido ? r.apellido : '. . .'}</td>
+          <td className='py-2'>{r.oximetria ? r.oximetria : '. . .'}</td>
+          <td className='py-2'>{r.frecuencia ? r.frecuencia : '. . .'}</td>
+          <td className='py-2'>{r.fecha ? r.fecha : '. . .'}</td>
+          <button className='btn btn-red m-2' onClick={() => handleModal('registro', `${r.nombre} ${r.apellido}`, r.fecha, r._id)}><BsTrash /></button>
+          <button className='btn btn-teal m-2' onClick={() => navigate(`/ver/registro/${r._id}`)}><BsEye /></button>
 
-    </div>
+        </tr>
+      )
 
+    : registros.filter(reg => reg.apellido.toLowerCase().includes(buscarValor)).reverse().map(r => 
+        <tr className="hover:bg-green-50 dark:hover:bg-zinc-700 transition text-sm sm:text-base" key={r._id}>
+          <td className='py-2'>{r.nombre ? r.nombre : '. . .'}</td>
+          <td className='py-2'>{r.apellido ? r.apellido : '. . .'}</td>
+          <td className='py-2'>{r.oximetria ? r.oximetria : '. . .'}</td>
+          <td className='py-2'>{r.frecuencia ? r.frecuencia : '. . .'}</td>
+          <td className='py-2'>{r.fecha ? r.fecha : '. . .'}</td>
+          <button className='btn btn-red m-2' onClick={() => handleModal('registro', `${r.nombre} ${r.apellido}`, r.fecha, r._id)}><BsTrash /></button>
+          <button className='btn btn-teal m-2' onClick={() => navigate(`/ver/registro/${r._id}`)}><BsEye /></button>
+        </tr>
+      )
   :  <tr>
       <td className="py-14 text-center" colSpan="100%">
         <AiOutlineLoading className=" text-center text-6xl animate-spin inline-block" />
@@ -145,9 +183,8 @@ function VisualizarRegistros() {
               </button>
             </div>
 
-            <button className=" btn btn-green text-lg sm:text-xl md:text-2xl" onClick={()=> navigate('/registrar/paciente')}><AiOutlinePlus /></button>
+            <button className=" btn btn-green text-lg sm:text-xl md:text-2xl" onClick={()=> navigate('/registrar/manual')}><AiOutlinePlus /></button>
           </div>
-          {/* <hr className='my-2 w-1/2  mx-auto'/> */}
           <div className=" overflow-x-auto w-11/12 mx-auto mt-4 styled-scrollbar">
 
             <table className="table-auto rounded w-full min-w-max text-center">
@@ -158,10 +195,11 @@ function VisualizarRegistros() {
                   <th className="p-2">Oximetría</th>
                   <th className="p-2">Frecuencia</th>
                   <th className="p-2">Fecha</th>
+                  <th className="p-2">Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {/* {pacientesRows} */}
+                {registrosRows}
               </tbody>
             </table>
           </div>
@@ -188,7 +226,7 @@ function VisualizarRegistros() {
         </div>
       }
       <ToastContainer theme={colorScheme} position="top-center"/>
-      
+      <ModalEliminar isActive={modal.isActive} handleEliminar={handleEliminar} setModal={setModal} tipo={modal.tipo} nombre={modal.nombre} fecha={modal.fecha} id={modal.id} />
     </>
   )
 }
