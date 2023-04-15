@@ -55,3 +55,11 @@
 .styled-scrollbar{
     @apply scrollbar-thin scrollbar-thumb-green-400 dark:scrollbar-thumb-zinc-700
 }
+
+.mas{
+    @apply text-green-500 dark:text-green-400
+}
+
+.fondo{
+    @apply bg-white dark:bg-zinc-800
+}
