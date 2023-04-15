@@ -44,7 +44,7 @@ const RegistroManual = () => {
     const postObj = {
       fecha: fecha,
       nombre: alumno.split('-')[0],
-      apellido: alumno.split('-')[1],
+      apellido: alumno.split('-')[1] || "",
       oximetria: oximetria,
       frecuencia: frecuencia,
       observaciones: observaciones
