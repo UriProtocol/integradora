@@ -38,8 +38,9 @@ function App() {
   <div className={`app ${theme}`}>
     {/* El siguiente div hace que el fondo fuera del div app se mantenga del color del fondo */}
     <div className=' -z-50 fixed bg-green-50 dark:bg-zinc-700 h-[200vh] w-[200vw]'></div> 
+
     <Sidebar setTheme={setTheme} />
-    <div className='flex justify-center items-center ml-auto flex-1 lg:flex-none w-screen lg:w-[calc(100%-20rem)] p-8 bg-green-50 dark:bg-zinc-700 text-green-900 dark:text-green-50'>
+    <div className='flex justify-center items-center ml-auto flex-1 lg:flex-none w-screen lg:w-[calc(100%-20rem)] p-8 sm:pl-16 bg-green-50 dark:bg-zinc-700 text-green-900 dark:text-green-50'>
       <Routes>
         <Route index element={<Home />}/>
         <Route path='registrar'>
