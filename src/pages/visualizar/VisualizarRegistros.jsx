@@ -140,8 +140,10 @@ function VisualizarRegistros() {
           <td className='py-2'>{r.oximetria ? r.oximetria : '. . .'}</td>
           <td className='py-2'>{r.frecuencia ? r.frecuencia : '. . .'}</td>
           <td className='py-2'>{r.fecha ? r.fecha : '. . .'}</td>
-          <button className='btn btn-red m-2' onClick={() => handleModal('registro', `${r.nombre} ${r.apellido}`, r.fecha, r._id)}><BsTrash /></button>
-          <button className='btn btn-teal m-2' onClick={() => navigate(`/ver/registro/${r._id}`)}><BsEye /></button>
+          <td className='py-2'>
+            <button className='btn btn-red m-2' onClick={() => handleModal('registro', `${r.nombre} ${r.apellido}`, r.fecha, r._id)}><BsTrash /></button>
+            <button className='btn btn-teal m-2' onClick={() => navigate(`/ver/registro/${r._id}`)}><BsEye /></button>
+          </td>
 
         </tr>
       )
@@ -153,8 +155,10 @@ function VisualizarRegistros() {
           <td className='py-2'>{r.oximetria ? r.oximetria : '. . .'}</td>
           <td className='py-2'>{r.frecuencia ? r.frecuencia : '. . .'}</td>
           <td className='py-2'>{r.fecha ? r.fecha : '. . .'}</td>
-          <button className='btn btn-red m-2' onClick={() => handleModal('registro', `${r.nombre} ${r.apellido}`, r.fecha, r._id)}><BsTrash /></button>
-          <button className='btn btn-teal m-2' onClick={() => navigate(`/ver/registro/${r._id}`)}><BsEye /></button>
+          <td className='py-2'>
+            <button className='btn btn-red m-2' onClick={() => handleModal('registro', `${r.nombre} ${r.apellido}`, r.fecha, r._id)}><BsTrash /></button>
+            <button className='btn btn-teal m-2' onClick={() => navigate(`/ver/registro/${r._id}`)}><BsEye /></button>
+          </td>
         </tr>
       )
   :  <tr>
