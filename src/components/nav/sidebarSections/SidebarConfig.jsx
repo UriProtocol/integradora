@@ -13,6 +13,7 @@ const SidebarConfig = forwardRef((props, ref) => {
     visualizarPacientes: localStorage.getItem('visualizarPacientes') || 'tabla',
     visualizarRegistros: localStorage.getItem('visualizarRegistros') || 'tarjetas'
   })
+  const [isModalActive, setIsModalActive] = useState(JSON.parse(localStorage.getItem('isModalActive')) || true)
 
   const {visualizarPacientes, visualizarRegistros} = visualizar
 
@@ -45,6 +46,15 @@ const SidebarConfig = forwardRef((props, ref) => {
         break;
     }
   }
+  function handleModalToggle(boton){ //El parámetro de botón tendrá un valor de false para ocultar y un valor de true para mostrar
+    if(boton){
+      setIsModalActive(true)
+      localStorage.setItem('isModalActive', 'true')
+    }else{
+      setIsModalActive(false)
+      localStorage.setItem('isModalActive', 'false')
+    }
+  }
 
   return (
     <div className="sidebar-section !-translate-x-full" ref={ref}>
@@ -54,7 +64,12 @@ const SidebarConfig = forwardRef((props, ref) => {
       {/* <BsSearch className=" absolute mt-[1.4rem] ml-5" /><input placeholder="Buscar en configuración" className="sidebar-input"/>  */}
 
       {isDarkMode ? <button onClick={() => handleThemeToggle('light')} className='py-2 px-4 ml-4 bg-zinc-700 rounded mt-4'>Cambiar tema <BsMoon className="inline-block ml-2 mb-1.5 text-sm"/></button> : <button onClick={() => handleThemeToggle('dark')} className='py-2 px-4 ml-4 bg-green-200 rounded mt-4'>Cambiar tema <BsSun className="inline-block mb-1 ml-2"/></button>} 
-      <div className="mt-6 py-3 border-y border-green-300 dark:border-zinc-600">
+      <div className="py-3 border-t mt-6 border-green-300 dark:border-zinc-600">
+        <p className="mb-3">Mensajes de confirmación</p>
+        <button className={`py-2 px-3 text-xs mx-2 rounded ${isModalActive ? '' : 'bg-green-200 dark:bg-zinc-700'}`} onClick={()=> handleModalToggle(false)}>Ocultar</button>
+        <button className={`py-2 px-3 text-xs mx-2 rounded ${isModalActive ? 'bg-green-200 dark:bg-zinc-700' : ''}`} onClick={()=> handleModalToggle(true)}>Mostrar</button>
+      </div> 
+      <div className="py-3 border-y border-green-300 dark:border-zinc-600">
         <p className="mb-3">Visualizar registros</p>
         <button className={`py-2 px-3 text-xs mx-2 rounded ${visualizarRegistros === 'tabla' ? 'bg-green-200 dark:bg-zinc-700' : ''}`} onClick={()=> handleVisualizarToggle('registros', 'tabla')}>Tabla</button>
         <button className={`py-2 px-3 text-xs mx-2 rounded ${visualizarRegistros === 'tarjetas' ? 'bg-green-200 dark:bg-zinc-700' : ''}`} onClick={()=> handleVisualizarToggle('registros', 'tarjetas')}>Tarjetas</button>
@@ -63,7 +78,7 @@ const SidebarConfig = forwardRef((props, ref) => {
         <p className="mb-3">Visualizar pacientes</p>
         <button className={`py-2 px-3 text-xs mx-2 rounded ${visualizarPacientes === 'tabla' ? 'bg-green-200 dark:bg-zinc-700' : ''}`} onClick={()=> handleVisualizarToggle('pacientes', 'tabla')}>Tabla</button>
         <button className={`py-2 px-3 text-xs mx-2 rounded ${visualizarPacientes === 'tarjetas' ? 'bg-green-200 dark:bg-zinc-700' : ''}`} onClick={()=> handleVisualizarToggle('pacientes', 'tarjetas')}>Tarjetas</button>
-      </div>  
+      </div> 
 
     </div>
   );
