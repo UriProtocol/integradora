@@ -18,7 +18,7 @@
     @apply block sm:hidden absolute bg-green-200 dark:bg-zinc-800 pl-4 pr-1.5 py-5 mt-3 h-fit rounded-r transition z-50
 }
 .container{
-    @apply rounded shadow-md bg-white dark:bg-zinc-800 w-11/12 py-6 px-8 max-h-[90%] overflow-auto  scrollbar-thin scrollbar-thumb-green-400 dark:scrollbar-thumb-zinc-600
+    @apply rounded shadow-md bg-white dark:bg-zinc-800 w-11/12 py-6 px-8 max-h-[90%] overflow-auto  scrollbar-thin scrollbar-thumb-green-400 dark:scrollbar-thumb-zinc-600 animate-container-appear
 }
 .container-title{
     @apply text-xl sm:text-2xl md:text-3xl text-center
