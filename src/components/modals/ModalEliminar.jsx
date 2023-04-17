@@ -21,7 +21,6 @@ export default function ModalEliminar({tipo, handleEliminar, id, nombre, fecha, 
         handleEliminar(id)
         handleClose()
     }
-    
 
     return (
     ReactDom.createPortal(
@@ -35,7 +34,7 @@ export default function ModalEliminar({tipo, handleEliminar, id, nombre, fecha, 
                     <button className='btn btn-red' onClick={() => handleBorrar(id)}>Aceptar</button>
                 </div>
             </div>
-            <div className='inset-0 fixed z-10' onClick={handleClose}/> {/*Al hacer click en el fondo ta,bién se cerrará el popup*/}
+            <div className='inset-0 fixed z-10' onClick={handleClose}/> {/*Al hacer click en el fondo también se cerrará el popup*/}
         </div>
 
     </>,
