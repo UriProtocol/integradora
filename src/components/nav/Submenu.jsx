@@ -23,7 +23,7 @@ const Submenu = ({handleSection, handleSubMenu}) => {
       <div className="submenu -translate-x-full sm:translate-x-0" ref={subMenu}>
        
         <AiOutlinePlusCircle className=" text-3xl text-green-600 dark:text-green-200 cursor-pointer" onClick={()=> navigate('/')}/>
-        <small className=" text-xs !mt-2 text-green-600 dark:text-green-200 font-semibold">Medifiles</small>
+        <small className=" text-xs !mt-2 text-green-600 dark:text-green-200 font-semibold cursor-pointer" onClick={()=> navigate('/')}>Medifiles</small>
 
 
         {/* <button
