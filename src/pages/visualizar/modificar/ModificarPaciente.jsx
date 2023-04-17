@@ -31,11 +31,16 @@ const ModificarPaciente = () => {
       nombre: '',
       isActive: false
     })
+    const [isModalActive, setIsModalActive] = useState(localStorage.getItem('isModalActive') || 'true') //Variable de estado para revisar si las ventanas modales están activadas o desactivadas en la configuración
 
     const navigate = useNavigate()
     
     useEffect(()=>{
         getPaciente()
+        window.addEventListener('modalEvent', getIsModalActive)
+        return () =>{
+          window.removeEventListener('modalEvent', getIsModalActive)
+        }
     }, [])
 
     async function getPaciente(){
@@ -117,6 +122,9 @@ const ModificarPaciente = () => {
         nombre: nombre,
       })
     }
+    function getIsModalActive(){
+      setIsModalActive(localStorage.getItem('isModalActive'))
+    }
 
     const { fecha, nombre, apellido, genero, edad, carrera, cuatrimestre, grupo, padecimiento, medicamento, observaciones} = paciente
 
@@ -141,8 +149,10 @@ const ModificarPaciente = () => {
                 </div>
                 <div className='mt-6 flex justify-center gap-6'>
                     <button className='btn btn-slate !px-3' type='button' onClick={()=> navigate('/visualizar/pacientes')}>Volver</button>
-                    {/* <button className='btn btn-red' type='button' onClick={handleEliminar}>Eliminar</button> */}
-                    <button className='btn btn-blue !px-3' type='button' onClick={() => handleModal(nombre)}>Modificar</button>
+                    { isModalActive === 'true'
+                      ? <button className='btn btn-blue !px-3' type='button' onClick={() => handleModal(nombre)}>Modificar</button>
+                      : <button className='btn btn-blue !px-3' type='button' onClick={handleSubmit}>Modificar</button>
+                    }
                 </div>      
             </form>
         </div>

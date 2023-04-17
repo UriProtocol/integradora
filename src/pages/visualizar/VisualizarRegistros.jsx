@@ -8,7 +8,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import ModalEliminar from '../../components/modals/ModalEliminar'
 
-function RegistroCard({nombre, apellido, oximetria, frecuencia, temperatura, fecha, id, handleModal}){
+function RegistroCard({nombre, apellido, oximetria, frecuencia, temperatura, fecha, id, handleModal, handleEliminar, isModalActive}){
 
   const navigate = useNavigate()
 
@@ -28,7 +28,10 @@ function RegistroCard({nombre, apellido, oximetria, frecuencia, temperatura, fec
         <p className='text-center text-lg col-span-2 mt-4'>{fecha ? fecha : '. . .'}</p>
       </div>
       <div className='text-center mt-6 flex justify-center gap-6'>
-        <button className='btn btn-red' onClick={() => handleModal('registro', `${nombre} ${apellido}`, fecha, id)}>Eliminar</button>
+        {isModalActive === 'true' 
+        ? <button className='btn btn-red' onClick={() => handleModal('registro', `${nombre} ${apellido}`, fecha, id)}>Eliminar</button>
+        : <button className='btn btn-red' onClick={() => handleEliminar(id)}>Eliminar</button>
+        }
         <button className='btn btn-teal !px-5' onClick={() => navigate(`/ver/registro/${id}`)}>Ver</button>
       </div>
     </div>
@@ -50,6 +53,7 @@ function VisualizarRegistros() {
     nombre: '',
     fecha: ''
   })
+  const [isModalActive, setIsModalActive] = useState(localStorage.getItem('isModalActive') || 'true') //Variable de estado para revisar si las ventanas modales están activadas o desactivadas en la configuración
 
   const colorScheme = localStorage.getItem('theme') //Para cambiar el color del calendario y del toast en input type="date"
 
@@ -57,10 +61,11 @@ function VisualizarRegistros() {
 
   useEffect(() => {
     getRegistros()
-    setVisualizar()
-    window.addEventListener('click', setVisualizar) //No es la manera más eficiente de hacerlo, pero ya que no encontré otra manera, cada vez que se haga click en la página se ejecutará la función setVisualizar que cambiará el tipo de visualización si hacemos click en el botón de la configuración
+    window.addEventListener('visualizarEvent', getVisualizar) 
+    window.addEventListener('modalEvent', getIsModalActive)
     return () =>{
-      window.removeEventListener('click', setVisualizar)
+      window.removeEventListener('visualizarEvent', getVisualizar)
+      window.removeEventListener('modalEvent', getIsModalActive)
     }
   }, [])
 
@@ -103,7 +108,7 @@ function VisualizarRegistros() {
   function handleBuscarToggle(){
     buscarTipo === 'nombre' ? setBuscar({...buscar, buscarTipo: 'apellido'}) : setBuscar({...buscar, buscarTipo: 'nombre'})
   }
-  function setVisualizar(){
+  function getVisualizar(){
     setVisualizarRegistros(localStorage.getItem('visualizarRegistros'))
   }
   function handleModal(tipo = '', nombre = '', fecha = '', id = ''){
@@ -115,15 +120,18 @@ function VisualizarRegistros() {
       id: id
     })
   }
+  function getIsModalActive(){
+    setIsModalActive(localStorage.getItem('isModalActive'))
+  }
 
   const {buscarTipo, buscarValor} = buscar
 
   const registrosCards = registros //Si se pueden obtener los registros, se muestran, si no, se muestra la animación de carga
   ?  
     buscarTipo === 'nombre'
-    ? registros.filter(reg => reg.nombre.toLowerCase().includes(buscarValor)).reverse().map(r => <RegistroCard key={r._id} nombre={r.nombre} apellido={r.apellido} oximetria={r.oximetria} frecuencia={r.frecuencia} fecha={r.fecha} id={r._id} handleModal={handleModal}/>  //El reverse se agrega para que se muestren los registros en orden del más actual al más viejo
+    ? registros.filter(reg => reg.nombre.toLowerCase().includes(buscarValor)).reverse().map(r => <RegistroCard key={r._id} nombre={r.nombre} apellido={r.apellido} oximetria={r.oximetria} frecuencia={r.frecuencia} fecha={r.fecha} id={r._id} handleModal={handleModal} handleEliminar={handleEliminar} isModalActive={isModalActive}/>  //El reverse se agrega para que se muestren los registros en orden del más actual al más viejo
     )
-    : registros.filter(reg => reg.apellido.toLowerCase().includes(buscarValor)).reverse().map(r => <RegistroCard key={r._id} nombre={r.nombre} apellido={r.apellido} oximetria={r.oximetria} frecuencia={r.frecuencia} fecha={r.fecha} id={r._id} handleModal={handleModal}/>
+    : registros.filter(reg => reg.apellido.toLowerCase().includes(buscarValor)).reverse().map(r => <RegistroCard key={r._id} nombre={r.nombre} apellido={r.apellido} oximetria={r.oximetria} frecuencia={r.frecuencia} fecha={r.fecha} id={r._id} handleModal={handleModal} handleEliminar={handleEliminar} isModalActive={isModalActive}/>
     )
 
   : <div className='h-full w-full grid justify-center items-center'>
@@ -141,7 +149,10 @@ function VisualizarRegistros() {
           <td className='py-2'>{r.frecuencia ? r.frecuencia : '. . .'}</td>
           <td className='py-2'>{r.fecha ? r.fecha : '. . .'}</td>
           <td className='py-2'>
-            <button className='btn btn-red m-2' onClick={() => handleModal('registro', `${r.nombre} ${r.apellido}`, r.fecha, r._id)}><BsTrash /></button>
+            {isModalActive === 'true'
+            ? <button className='btn btn-red m-2' onClick={() => handleModal('registro', `${r.nombre} ${r.apellido}`, r.fecha, r._id)}><BsTrash /></button>
+            : <button className='btn btn-red m-2' onClick={() => handleEliminar(r._id)}><BsTrash /></button>
+            }
             <button className='btn btn-teal m-2' onClick={() => navigate(`/ver/registro/${r._id}`)}><BsEye /></button>
           </td>
 
@@ -156,7 +167,10 @@ function VisualizarRegistros() {
           <td className='py-2'>{r.frecuencia ? r.frecuencia : '. . .'}</td>
           <td className='py-2'>{r.fecha ? r.fecha : '. . .'}</td>
           <td className='py-2'>
-            <button className='btn btn-red m-2' onClick={() => handleModal('registro', `${r.nombre} ${r.apellido}`, r.fecha, r._id)}><BsTrash /></button>
+          {isModalActive === 'true'
+          ? <button className='btn btn-red m-2' onClick={() => handleModal('registro', `${r.nombre} ${r.apellido}`, r.fecha, r._id)}><BsTrash /></button>
+          : <button className='btn btn-red m-2' onClick={() => handleEliminar(r._id)}><BsTrash /></button>
+          }
             <button className='btn btn-teal m-2' onClick={() => navigate(`/ver/registro/${r._id}`)}><BsEye /></button>
           </td>
         </tr>

@@ -6,7 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import ModalEliminar from "../../components/modals/ModalEliminar";
 
-function PacienteCard({nombre, apellido, edad, carrera, cuatrimestre, grupo, id, handleModal}){
+function PacienteCard({nombre, apellido, edad, carrera, cuatrimestre, grupo, id, handleModal, handleEliminar, isModalActive}){
 
   const navigate = useNavigate()
 
@@ -26,7 +26,10 @@ function PacienteCard({nombre, apellido, edad, carrera, cuatrimestre, grupo, id,
 
       </div>
       <div className='text-center mt-6 flex justify-center gap-6'>
-        <button className='btn btn-red' onClick={() => handleModal('paciente', `${nombre} ${apellido}`, '', id)}>Eliminar</button>
+        {isModalActive === 'true' 
+        ? <button className='btn btn-red' onClick={() => handleModal('paciente', `${nombre} ${apellido}`, '', id)}>Eliminar</button>
+        : <button className='btn btn-red' onClick={() => handleEliminar(id)}>Eliminar</button>
+        }
         <button className='btn btn-teal !px-5' onClick={() => navigate(`/ver/paciente/${id}`)}>Ver</button>
         <button className='btn btn-blue !px-5' onClick={() => navigate(`/modificar/paciente/${id}`)}>Modificar</button>
       </div>
@@ -53,18 +56,18 @@ const VisualizarPacientes = () => {
     nombre: '',
     fecha: ''
   })
-
-
+  const [isModalActive, setIsModalActive] = useState(localStorage.getItem('isModalActive') || 'true') //Variable de estado para revisar si las ventanas modales están activadas o desactivadas en la configuración
 
   const navigate = useNavigate()
 
   useEffect(() => {
     getPacientes()
-
     setVisualizar()
-    window.addEventListener('click', setVisualizar) //No es la manera más eficiente de hacerlo, pero ya que no encontré otra manera, cada vez que se haga click en la página se ejecutará la función setVisualizar que cambiará el tipo de visualización si hacemos click en el botón de la configuración
+    window.addEventListener('visualizarEvent', setVisualizar)
+    window.addEventListener('modalEvent', getIsModalActive)
     return () =>{
-      window.removeEventListener('click', setVisualizar)
+      window.removeEventListener('visualizarEvent', setVisualizar)
+      window.removeEventListener('modalEvent', getIsModalActive)
     }
   }, []);
 
@@ -124,6 +127,9 @@ const VisualizarPacientes = () => {
       id: id
     })
   }
+  function getIsModalActive(){
+    setIsModalActive(localStorage.getItem('isModalActive'))
+  }
 
   const {buscarTipo, buscarValor} = buscar
 
@@ -131,9 +137,9 @@ const VisualizarPacientes = () => {
   const pacientesCards = pacientes //Si se pueden obtener los registros, se muestran, si no, se muestra la animación de carga
   ?  
     buscarTipo === 'nombre'
-    ? pacientes.filter(pac => pac.nombre.toLowerCase().includes(buscarValor)).reverse().map(p => <PacienteCard key={p._id} nombre={p.nombre} apellido={p.apellido} edad={p.edad} carrera={p.carrera} cuatrimestre={p.cuatrimestre} grupo={p.grupo} id={p._id} handleModal={handleModal}/>  //El reverse se agrega para que se muestren los registros en orden del más actual al más viejo
+    ? pacientes.filter(pac => pac.nombre.toLowerCase().includes(buscarValor)).reverse().map(p => <PacienteCard key={p._id} nombre={p.nombre} apellido={p.apellido} edad={p.edad} carrera={p.carrera} cuatrimestre={p.cuatrimestre} grupo={p.grupo} id={p._id} handleModal={handleModal} handleEliminar={handleEliminar} isModalActive={isModalActive}/>  //El reverse se agrega para que se muestren los registros en orden del más actual al más viejo
     )
-    : pacientes.filter(pac => pac.apellido.toLowerCase().includes(buscarValor)).reverse().map(p => <PacienteCard key={p._id} nombre={p.nombre} apellido={p.apellido} edad={p.edad} carrera={p.carrera} cuatrimestre={p.cuatrimestre} grupo={p.grupo} id={p._id} handleModal={handleModal}/>
+    : pacientes.filter(pac => pac.apellido.toLowerCase().includes(buscarValor)).reverse().map(p => <PacienteCard key={p._id} nombre={p.nombre} apellido={p.apellido} edad={p.edad} carrera={p.carrera} cuatrimestre={p.cuatrimestre} grupo={p.grupo} id={p._id} handleModal={handleModal} handleEliminar={handleEliminar} isModalActive={isModalActive}/>
     )
 
   : <div className='h-full w-full grid justify-center items-center'>
@@ -151,7 +157,10 @@ const VisualizarPacientes = () => {
           <td className="py-2">{p.carrera ? p.carrera : '. . .'}</td> 
           <td className="py-2">{p.cuatrimestre ? p.cuatrimestre + ' °' : '. . .'} {p.grupo}</td> 
           <td className="py-2">
-            <button className='btn btn-red m-2' onClick={() => handleModal('paciente', `${p.nombre} ${p.apellido}`, '', p._id)}><BsTrash /></button>
+            {isModalActive === 'true'
+            ? <button className='btn btn-red m-2' onClick={() => handleModal('paciente', `${p.nombre} ${p.apellido}`, p.fecha, p._id)}><BsTrash /></button>
+            : <button className='btn btn-red m-2' onClick={() => handleEliminar(p._id)}><BsTrash /></button>
+            }
             <button className='btn btn-teal m-2' onClick={() => navigate(`/ver/paciente/${p._id}`)}><BsEye /></button>
             <button className='btn btn-blue m-2' onClick={()=> navigate(`/modificar/paciente/${p._id}`)}><BsPen /></button>
           </td>
@@ -165,7 +174,10 @@ const VisualizarPacientes = () => {
         <td className="py-2">{p.carrera ? p.carrera : '. . .'}</td> 
         <td className="py-2">{p.cuatrimestre ? p.cuatrimestre + ' °' : '. . .'} {p.grupo}</td> 
         <td className="py-2">
-          <button className='btn btn-red m-2' onClick={() => handleModal('paciente', `${p.nombre} ${p.apellido}`, '', p._id)}><BsTrash /></button>
+          {isModalActive === 'true'
+          ? <button className='btn btn-red m-2' onClick={() => handleModal('paciente', `${p.nombre} ${p.apellido}`, p.fecha, p._id)}><BsTrash /></button>
+          : <button className='btn btn-red m-2' onClick={() => handleEliminar(p._id)}><BsTrash /></button>
+          }
           <button className='btn btn-teal m-2' onClick={() => navigate(`/ver/paciente/${p._id}`)}><BsEye /></button>
           <button className='btn btn-blue m-2' onClick={()=> navigate(`/modificar/paciente/${p._id}`)}><BsPen /></button>
         </td>

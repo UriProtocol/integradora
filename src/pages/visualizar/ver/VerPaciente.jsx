@@ -33,11 +33,17 @@ const VerPaciente = () => {
       nombre: '',
       fecha: ''
     })
+    const [isModalActive, setIsModalActive] = useState(localStorage.getItem('isModalActive') || 'true') //Variable de estado para revisar si las ventanas modales están activadas o desactivadas en la configuración
+
 
     const navigate = useNavigate()
     
     useEffect(()=>{
         getPaciente()
+        window.addEventListener('modalEvent', getIsModalActive)
+        return () =>{
+          window.removeEventListener('modalEvent', getIsModalActive)
+        }
     }, [])
 
     async function getPaciente(){
@@ -86,6 +92,9 @@ const VerPaciente = () => {
         id: id
       })
     }
+    function getIsModalActive(){
+      setIsModalActive(localStorage.getItem('isModalActive'))
+    }
 
     const { fecha, nombre, apellido, genero, edad, carrera, cuatrimestre, grupo, padecimiento, medicamento, observaciones} = paciente
 
@@ -110,7 +119,11 @@ const VerPaciente = () => {
             </div>
             <div className='mt-6 flex justify-center gap-6'>
                 <button className='btn btn-slate !px-3' onClick={()=> navigate('/visualizar/pacientes')}>Volver</button>
-                <button className='btn btn-red' onClick={() => handleModal('paciente', `${nombre} ${apellido}`)}>Eliminar</button>
+                {isModalActive === 'true'
+                ? <button className='btn btn-red' onClick={() => handleModal('paciente', `${nombre} ${apellido}`)}>Eliminar</button>
+                : <button className='btn btn-red' onClick={() => handleEliminar(id)}>Eliminar</button>
+                }
+                {/* <button className='btn btn-red' onClick={() => handleModal('paciente', `${nombre} ${apellido}`)}>Eliminar</button> */}
                 <button className='btn btn-blue' onClick={()=> navigate(`/modificar/paciente/${id}`)}>Modificar</button>
             </div>
         </div>

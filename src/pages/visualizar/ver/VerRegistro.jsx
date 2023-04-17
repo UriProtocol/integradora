@@ -29,11 +29,17 @@ const VerRegistro = () => {
     nombre: '',
     fecha: ''
   })
+  const [isModalActive, setIsModalActive] = useState(localStorage.getItem('isModalActive') || 'true') //Variable de estado para revisar si las ventanas modales están activadas o desactivadas en la configuración
+
 
   const navigate = useNavigate()
   
   useEffect(()=>{
       getRegistro()
+      window.addEventListener('modalEvent', getIsModalActive)
+      return () =>{
+        window.removeEventListener('modalEvent', getIsModalActive)
+      }
   }, [])
 
   async function getRegistro(){
@@ -82,6 +88,9 @@ const VerRegistro = () => {
       id: id
     })
   }
+  function getIsModalActive(){
+    setIsModalActive(localStorage.getItem('isModalActive'))
+  }
 
   const {fecha, nombre, apellido, oximetria, frecuencia, observaciones} = registro
 
@@ -101,7 +110,10 @@ const VerRegistro = () => {
             </div>
             <div className='mt-6 flex justify-center gap-6'>
                 <button className='btn btn-slate !px-3' onClick={()=> navigate('/visualizar/registros')}>Volver</button>
-                <button className='btn btn-red' onClick={() => handleModal('registro', `${nombre} ${apellido}`, fecha)}>Eliminar</button>
+                {isModalActive === 'true'
+                ? <button className='btn btn-red' onClick={() => handleModal('registro', `${nombre} ${apellido}`, fecha)}>Eliminar</button>
+                : <button className='btn btn-red' onClick={() => handleEliminar()}>Eliminar</button>
+                }
             </div>
       </div>
       <ToastContainer theme={colorScheme} position="top-center" />
