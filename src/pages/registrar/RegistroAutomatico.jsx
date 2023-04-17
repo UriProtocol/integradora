@@ -38,7 +38,7 @@
 //   function handleSubmit(e){
 //     e.preventDefault()
 //   }
-  
+
 //   return (
 //     <>
 //     <div className='container'>
@@ -154,6 +154,13 @@ const RegistroAutomatico = () => {
   const [alumnos, setAlumnos] = useState([])
 
   useEffect(() => {
+
+    async function getAlumnos() {
+      const pacientesVal = await axios.get("https://integradora.fly.dev/pacientes");
+      // setPacientes(pacientesVal.data);
+      setAlumnos(pacientesVal.data)
+    }
+
     const fetchData = async () => {
       try {
         const response = await axios.get('http://blynk.cloud/external/api/get?token=ik86R45NKaQc25kh2ziw2-wjIjEX1gz8&v1&v2&v3');
@@ -168,6 +175,8 @@ const RegistroAutomatico = () => {
       }
     };
 
+    getAlumnos()
+
     const interval = setInterval(fetchData, 1000);
     return () => clearInterval(interval);
   }, []);
@@ -178,17 +187,23 @@ const RegistroAutomatico = () => {
     e.preventDefault()
   }
 
-  function handleChange(e){
-    const {name, value} = e.target
+  function handleChange(e) {
+    const { name, value } = e.target
 
-    setDatos({...datos, [name]: value})
+    setDatos({ ...datos, [name]: value })
   }
 
-  function handleCancel(){
+  function handleCancel() {
     setDatos(initialState)
   }
 
-  const {fecha, alumno, oximetria, frecuencia, observaciones} = datos
+  const alumnosOpc = alumnos 
+  ? alumnos.map(a => (
+    <option key={a._id} value={`${a.nombre}-${a.apellido}`}> {`${a.nombre} ${a.apellido}`}</option> //El guion entre el nombre y el apellido nos sirve para separarlos a la hora de enviar los datos
+  ))
+  : <option value="">----</option>
+  
+  const { fecha, alumno, oximetria, frecuencia, observaciones } = datos
 
 
   return (
@@ -203,21 +218,22 @@ const RegistroAutomatico = () => {
               <input type='date' className='form-input w-3/4' style={colorScheme === 'dark' ? { colorScheme: 'dark' } : {}} value={fecha} name="fecha" onChange={handleChange} />
             </div>
             <div className='text-center'>
-              <label>Alumno</label><br />
-              <select className='form-input w-3/4'>
-                <option>Ángel Uriel González Urrutia</option>
+              <label htmlFor='alumno'>Alumno</label><br />
+              <select className='form-input w-3/4' value={alumno} name='alumno' onChange={handleChange}>
+                <option value=''>----</option>
+                {alumnosOpc}
               </select>
             </div>
           </div>
           {/* {contador == 50 ? ( */}
-            <div className='grid sm:grid-cols-2 gap-4 sm:gap-0 col-span-3'>
-              <div className='text-center relative'>
-                <BarraCircular id="oximetria" name="Oximetría" valor={spo2} />
-              </div>
-              <div className='text-center relative'>
-                <BarraCircular id="frecuencia" name="Frecuencia Cardiaca" valor={bpm} />
-              </div>
+          <div className='grid sm:grid-cols-2 gap-4 sm:gap-0 col-span-3'>
+            <div className='text-center relative'>
+              <BarraCircular id="oximetria" name="Oximetría" valor={spo2} />
             </div>
+            <div className='text-center relative'>
+              <BarraCircular id="frecuencia" name="Frecuencia Cardiaca" valor={bpm} />
+            </div>
+          </div>
           {/* ) : (
             <div className='grid col-span-3'>
               <div className='text-center relative'>

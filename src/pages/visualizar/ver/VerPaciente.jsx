@@ -48,7 +48,7 @@ const VerPaciente = () => {
 
     async function getPaciente(){
         try {
-            const pacienteVal = await axios.get(`http://127.0.0.1:5000/pacientes/ver/${id}`)
+            const pacienteVal = await axios.get(`https://integradora.fly.dev/pacientes/ver/${id}`)
             setPaciente(pacienteVal.data)
         } catch (error) {
             console.error(error)
@@ -57,7 +57,7 @@ const VerPaciente = () => {
 
     async function handleEliminar(){
         try {
-          const eliminarPaciente = await axios.delete(`http://127.0.0.1:5000/pacientes/eliminar/${id}`)
+          const eliminarPaciente = await axios.delete(`https://integradora.fly.dev/pacientes/eliminar/${id}`)
           notify(eliminarPaciente.status)
           setTimeout(() => {
             navigate('/visualizar/pacientes')

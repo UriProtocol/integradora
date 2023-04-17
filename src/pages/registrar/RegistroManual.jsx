@@ -33,7 +33,7 @@ const RegistroManual = () => {
   }, [])
 
   async function getAlumnos(){
-    const pacientesVal = await axios.get("http://127.0.0.1:5000/pacientes");
+    const pacientesVal = await axios.get("https://integradora.fly.dev/pacientes");
     // setPacientes(pacientesVal.data);
     setAlumnos(pacientesVal.data)
   }
@@ -51,7 +51,7 @@ const RegistroManual = () => {
     }
 
     try {
-      const response = await axios.post('http://127.0.0.1:5000/registros', postObj)
+      const response = await axios.post('https://integradora.fly.dev/registros', postObj)
       console.log(response)
       notify(response.status)
     } catch (err) {
@@ -88,13 +88,14 @@ const RegistroManual = () => {
   }
   function handleCancel(){
     setDatos(initialState)
+    navigate('/')
   }
 
-  const alumnosOpc = alumnos 
-  ? alumnos.map(a => (
-    <option key={a._id} value={`${a.nombre}-${a.apellido}`}> {`${a.nombre} ${a.apellido}`}</option> //El guion entre el nombre y el apellido nos sirve para separarlos a la hora de enviar los datos
-  ))
-  : <option value="">----</option>
+  const alumnosOpc = alumnos
+    ? alumnos.map(a => (
+      <option key={a._id} value={`${a.nombre}-${a.apellido}`}> {`${a.nombre} ${a.apellido}`}</option>
+    ))
+    : <option value="">----</option>
 
   const {fecha, alumno, oximetria, frecuencia, observaciones} = datos
   

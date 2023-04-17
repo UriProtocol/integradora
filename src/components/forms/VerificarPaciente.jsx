@@ -62,7 +62,7 @@ const VerificarPaciente = ({setForm}) => {
         }
 
         try {
-            const response = await axios.post('http://127.0.0.1:5000/pacientes', postObj)
+            const response = await axios.post('https://integradora.fly.dev/pacientes', postObj)
             notify(response.status)
             
         } catch (error) {

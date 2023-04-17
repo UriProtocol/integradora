@@ -7,8 +7,6 @@ import ModalEliminar from "../components/modals/ModalEliminar";
 
 const Home = () => {
   const [mensaje, setMensaje] = useState("");
-  const [tasks, setTasks] = useState([]);
-  const [inputValue, setInputValue] = useState("");
   const [pacientes, setPacientes] = useState("");
   const [registros, setRegistros] = useState("");
 
@@ -39,8 +37,8 @@ const Home = () => {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://pruebasint323.fly.dev/pacientes');
-        const response2 = await axios.get('https://pruebasint323.fly.dev/registros');
+        const response = await axios.get('https://integradora.fly.dev/pacientes');
+        const response2 = await axios.get('https://integradora.fly.dev/registros');
         const pacientesNumber = response.data.length;
         const registrosNumber = response2.data.length;
         setPacientes(pacientesNumber);

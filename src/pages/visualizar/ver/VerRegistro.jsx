@@ -44,7 +44,7 @@ const VerRegistro = () => {
 
   async function getRegistro(){
       try {
-          const registroVal = await axios.get(`http://127.0.0.1:5000/registros/ver/${id}`)
+          const registroVal = await axios.get(`https://integradora.fly.dev/registros/ver/${id}`)
           setRegistro(registroVal.data)
       } catch (error) {
           console.error(error)
@@ -53,7 +53,7 @@ const VerRegistro = () => {
 
   async function handleEliminar(){
       try {
-        const eliminarRegistro = await axios.delete(`http://127.0.0.1:5000/registros/eliminar/${id}`)
+        const eliminarRegistro = await axios.delete(`https://integradora.fly.dev/eliminar/${id}`)
         notify(eliminarRegistro.status)
         setTimeout(() => {
           navigate('/visualizar/registros')

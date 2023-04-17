@@ -70,13 +70,13 @@ function VisualizarRegistros() {
   }, [])
 
   async function getRegistros(){
-    const registrosVal = await axios.get("http://127.0.0.1:5000/registros");
+    const registrosVal = await axios.get("https://integradora.fly.dev/registros");
     setRegistros(registrosVal.data);
   }
 
   async function handleEliminar(id){
     try {
-      const eliminarRegistro = await axios.delete(`http://127.0.0.1:5000/registros/eliminar/${id}`)
+      const eliminarRegistro = await axios.delete(`https://integradora.fly.dev/registros/eliminar/${id}`)
       notify(eliminarRegistro.status)
       getRegistros()
     } catch (error) {

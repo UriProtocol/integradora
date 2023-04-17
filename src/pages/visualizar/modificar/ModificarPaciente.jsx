@@ -45,7 +45,7 @@ const ModificarPaciente = () => {
 
     async function getPaciente(){
         try {
-            const pacienteVal = await axios.get(`http://127.0.0.1:5000/pacientes/ver/${id}`)
+            const pacienteVal = await axios.get(`https://integradora.fly.dev/pacientes/ver/${id}`)
             setPaciente(pacienteVal.data)
         } catch (error) {
             console.error(error)
@@ -84,7 +84,7 @@ const ModificarPaciente = () => {
         }
 
         try {
-          const modificarPaciente = await axios.patch(`http://127.0.0.1:5000/pacientes/modificar/${id}`, postObj)
+          const modificarPaciente = await axios.patch(`https://integradora.fly.dev/pacientes/modificar/${id}`, postObj)
           notify(modificarPaciente.status)
           setTimeout(() => {
             navigate('/visualizar/pacientes')
