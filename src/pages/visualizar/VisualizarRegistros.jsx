@@ -15,17 +15,17 @@ function RegistroCard({nombre, apellido, oximetria, frecuencia, temperatura, fec
   return (
     <div className='p-4 rounded shadow w-3/4 mx-auto my-10 bg-white dark:bg-zinc-800 snap-center'>
       <h1 className='text-xl font-semibold text-center'>{nombre ? nombre: '. . . '} {apellido ? apellido : '. . .'}</h1>
-      <div className='grid sm:grid-cols-2 gap-4 mt-6 text-center'>
+      <div className='grid sm:grid-cols-3 gap-4 mt-6 text-center'>
         <p className='col-span-2 sm:col-span-1'>Oximetría<br />
           <SiOxygen className=' text-xl inline-block mb-1 mr-1'/> : {oximetria ? oximetria : '. . .'}
         </p>
         <p className='col-span-2 sm:col-span-1'>Frecuencia cardiaca <br />
           <BsFillHeartPulseFill className=' text-xl inline-block mb-0.5 mr-1'/> : {frecuencia ? frecuencia : '. . .'}
         </p>
-        {/* <p>Temperatura <br />
-          <TbTemperatureCelsius className=' text-xl inline-block mb-0.5 mr-1'/> : {temperatura}
-        </p> */}
-        <p className='text-center text-lg col-span-2 mt-4'>{fecha ? fecha : '. . .'}</p>
+        <p className='col-span-2 sm:col-span-1'>Temperatura <br />
+          <TbTemperatureCelsius className=' text-xl inline-block mb-0.5 mr-1'/> : {temperatura ? temperatura : '. . .'}
+        </p>
+        <p className='text-center text-lg col-span-3 mt-4'>{fecha ? fecha : '. . .'}</p>
       </div>
       <div className='text-center mt-6 flex justify-center gap-6'>
         {isModalActive === 'true' 
@@ -129,9 +129,9 @@ function VisualizarRegistros() {
   const registrosCards = registros //Si se pueden obtener los registros, se muestran, si no, se muestra la animación de carga
   ?  
     buscarTipo === 'nombre'
-    ? registros.filter(reg => reg.nombre.toLowerCase().includes(buscarValor)).reverse().map(r => <RegistroCard key={r._id} nombre={r.nombre} apellido={r.apellido} oximetria={r.oximetria} frecuencia={r.frecuencia} fecha={r.fecha} id={r._id} handleModal={handleModal} handleEliminar={handleEliminar} isModalActive={isModalActive}/>  //El reverse se agrega para que se muestren los registros en orden del más actual al más viejo
+    ? registros.filter(reg => reg.nombre.toLowerCase().includes(buscarValor)).reverse().map(r => <RegistroCard key={r._id} nombre={r.nombre} apellido={r.apellido} oximetria={r.oximetria} frecuencia={r.frecuencia} temperatura={r.temperatura} fecha={r.fecha} id={r._id} handleModal={handleModal} handleEliminar={handleEliminar} isModalActive={isModalActive}/>  //El reverse se agrega para que se muestren los registros en orden del más actual al más viejo
     )
-    : registros.filter(reg => reg.apellido.toLowerCase().includes(buscarValor)).reverse().map(r => <RegistroCard key={r._id} nombre={r.nombre} apellido={r.apellido} oximetria={r.oximetria} frecuencia={r.frecuencia} fecha={r.fecha} id={r._id} handleModal={handleModal} handleEliminar={handleEliminar} isModalActive={isModalActive}/>
+    : registros.filter(reg => reg.apellido.toLowerCase().includes(buscarValor)).reverse().map(r => <RegistroCard key={r._id} nombre={r.nombre} apellido={r.apellido} oximetria={r.oximetria} frecuencia={r.frecuencia} temperatura={r.temperatura} fecha={r.fecha} id={r._id} handleModal={handleModal} handleEliminar={handleEliminar} isModalActive={isModalActive}/>
     )
 
   : <div className='h-full w-full grid justify-center items-center'>
@@ -147,6 +147,7 @@ function VisualizarRegistros() {
           <td className='py-2'>{r.apellido ? r.apellido : '. . .'}</td>
           <td className='py-2'>{r.oximetria ? r.oximetria : '. . .'}</td>
           <td className='py-2'>{r.frecuencia ? r.frecuencia : '. . .'}</td>
+          <td className='py-2'>{r.temperatura ? r.temperatura : '. . .'}</td>
           <td className='py-2'>{r.fecha ? r.fecha : '. . .'}</td>
           <td className='py-2'>
             {isModalActive === 'true'
@@ -165,6 +166,7 @@ function VisualizarRegistros() {
           <td className='py-2'>{r.apellido ? r.apellido : '. . .'}</td>
           <td className='py-2'>{r.oximetria ? r.oximetria : '. . .'}</td>
           <td className='py-2'>{r.frecuencia ? r.frecuencia : '. . .'}</td>
+          <td className='py-2'>{r.temperatura ? r.temperatura : '. . .'}</td>
           <td className='py-2'>{r.fecha ? r.fecha : '. . .'}</td>
           <td className='py-2'>
           {isModalActive === 'true'
@@ -212,6 +214,7 @@ function VisualizarRegistros() {
                   <th className="p-2">Apellido</th>
                   <th className="p-2">Oximetría</th>
                   <th className="p-2">Frecuencia</th>
+                  <th className="p-2">Temperatura</th>
                   <th className="p-2">Fecha</th>
                   <th className="p-2">Acciones</th>
                 </tr>

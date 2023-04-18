@@ -21,7 +21,6 @@ const Home = () => {
 
     const updateImageSrc = () => {
       const hour = getCurrentHour();
-      console.log(hour)
 
       if (hour >= 0 && hour < 6) {
         setMensaje("Buenas noches!"); // Mensaje para la imagen de la noche

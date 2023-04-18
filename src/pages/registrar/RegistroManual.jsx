@@ -14,7 +14,7 @@ const initialState = {
   alumno: '',
   oximetria: '',
   frecuencia: '',
-  // temperatura: '',
+  temperatura: '',
   observaciones: ''
 
 }
@@ -40,13 +40,14 @@ const RegistroManual = () => {
 
   async function handleSubmit(e){
     e.preventDefault()
-    const {fecha, alumno, oximetria, frecuencia, observaciones} = datos
+    const {fecha, alumno, oximetria, frecuencia, temperatura, observaciones} = datos
     const postObj = {
       fecha: fecha,
       nombre: alumno.split('-')[0],
       apellido: alumno.split('-')[1] || "",
       oximetria: oximetria,
       frecuencia: frecuencia,
+      temperatura: temperatura,
       observaciones: observaciones
     }
 
@@ -88,7 +89,7 @@ const RegistroManual = () => {
   }
   function handleCancel(){
     setDatos(initialState)
-    navigate('/')
+    
   }
 
   const alumnosOpc = alumnos
@@ -97,7 +98,7 @@ const RegistroManual = () => {
     ))
     : <option value="">----</option>
 
-  const {fecha, alumno, oximetria, frecuencia, observaciones} = datos
+  const {fecha, alumno, oximetria, frecuencia, temperatura, observaciones} = datos
   
   return (
     <>
@@ -118,7 +119,7 @@ const RegistroManual = () => {
             </select>
           </div>
         </div>
-      <div className="col-span-3 grid sm:grid-cols-2 gap-4 sm:gap-0">
+      <div className="col-span-3 grid sm:grid-cols-3 gap-4 sm:gap-0">
         <div className='text-center'>
           <label htmlFor='oximetria'>Oximetría <SiOxygen className='inline-block ml-3 text-xl'/></label><br />
           <input type='number' placeholder='95' className='form-input w-3/5' value={oximetria} name='oximetria' onChange={handleChange}/>
@@ -126,6 +127,10 @@ const RegistroManual = () => {
         <div className='text-center'>
           <label htmlFor=''>Frecuencia Cardiaca <BsFillHeartPulseFill className='inline-block ml-3 text-xl'/></label><br />
           <input type='number' placeholder='110' className='form-input w-3/5' value={frecuencia} name='frecuencia' onChange={handleChange}/>
+        </div>
+        <div className='text-center'>
+          <label htmlFor=''>Temperatura <TbTemperatureCelsius className='inline-block ml-3 text-xl'/></label><br />
+          <input type='number' placeholder='35' className='form-input w-3/5' value={temperatura} name='temperatura' onChange={handleChange}/>
         </div>
       </div>
         {/* <div className='text-center'>

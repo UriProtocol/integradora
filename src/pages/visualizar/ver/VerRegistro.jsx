@@ -12,6 +12,7 @@ const initialState = {
   apellido: "",
   oximetria: "",
   frecuencia: "",
+  temperatura: "",
   observaciones: "",
     
 }
@@ -92,7 +93,7 @@ const VerRegistro = () => {
     setIsModalActive(localStorage.getItem('isModalActive'))
   }
 
-  const {fecha, nombre, apellido, oximetria, frecuencia, observaciones} = registro
+  const {fecha, nombre, apellido, oximetria, frecuencia, temperatura, observaciones} = registro
 
 
 
@@ -106,6 +107,7 @@ const VerRegistro = () => {
                 <p className='my-2 text-lg'><b className='mr-2'>Apellido :</b> {apellido ? apellido : '. . .'}</p>
                 <p className='my-2 text-lg'><b className='mr-2'>Oximetría:</b> {oximetria ? oximetria : '. . .'}</p>
                 <p className='my-2 text-lg'><b className='mr-2'>Frecuencia:</b> {frecuencia ? frecuencia : '. . .'}</p>
+                <p className='my-2 text-lg'><b className='mr-2'>Temperatura:</b> {temperatura ? temperatura : '. . .'}</p>
                 <p className='my-2 text-lg'><b className='mr-2'>Observaciones:</b> {observaciones ? observaciones : '. . .'}</p>
             </div>
             <div className='mt-6 flex justify-center gap-6'>

@@ -89,6 +89,8 @@ import { TbTemperatureCelsius } from 'react-icons/tb'
 import { SiOxygen } from 'react-icons/si'
 import { DateTime } from 'luxon'
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 function BarraCircular({ id, name, valor }) {
 
@@ -115,6 +117,8 @@ function BarraCircular({ id, name, valor }) {
       valor = 100;
     }
     barraValor = 125.6 + ((valor * 126.4) / 100);
+  } else if (id === "temperatura") {
+    barraValor = 125.6 + ((valor * 126.4) / 40);
   }
 
 
@@ -141,17 +145,20 @@ const initialState = {
   alumno: '',
   oximetria: '',
   frecuencia: '',
-  // temperatura: '',
+  temperatura: '',
   observaciones: ''
 }
 
 const RegistroAutomatico = () => {
   const [bpm, setBPM] = useState(null);
   const [spo2, setSpO2] = useState(null);
-  const [contador, setContador] = useState(0);
+  const [temp, setTemp] = useState(null)
+  // const [contador, setContador] = useState(0);
 
   const [datos, setDatos] = useState(initialState)
   const [alumnos, setAlumnos] = useState([])
+
+  const navigate = useNavigate()
 
   useEffect(() => {
 
@@ -163,13 +170,15 @@ const RegistroAutomatico = () => {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://blynk.cloud/external/api/get?token=ik86R45NKaQc25kh2ziw2-wjIjEX1gz8&v1&v2&v3');
+        const response = await axios.get('http://blynk.cloud/external/api/get?token=ik86R45NKaQc25kh2ziw2-wjIjEX1gz8&v1&v2&v3&v4');
         const bpmValue = response.data.v1;
         const spo2Value = response.data.v2;
-        const contadorValue = response.data.v3;
+        // const contadorValue = response.data.v3;
+        const tempValue = response.data.v4
         setBPM(bpmValue);
         setSpO2(spo2Value);
-        setContador(contadorValue);
+        // setContador(contadorValue);
+        setTemp(tempValue);
       } catch (error) {
         console.log(error);
       }
@@ -183,8 +192,48 @@ const RegistroAutomatico = () => {
 
   const colorScheme = localStorage.getItem('theme') //Solo para cambiar el color del calendario en input type="date"
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
+    const { fecha, alumno, observaciones } = datos
+    const postObj = {
+      fecha: fecha,
+      nombre: alumno.split('-')[0],
+      apellido: alumno.split('-')[1] || "",
+      oximetria: spo2,
+      frecuencia: bpm,
+      temperatura: temp,
+      observaciones: observaciones
+    }
+
+    try {
+      const response = await axios.post('https://integradora.fly.dev/registros', postObj)
+      console.log(response)
+      notify(response.status)
+    } catch (err) {
+      console.error(err)
+      notify(500)
+    }
+  }
+
+  function notify(num) {
+    if (num >= 200 && num < 300) {
+      toast.success(
+        'Registro agregado',
+        {
+          onClose: () => {
+            setTimeout(() => {
+              navigate('/visualizar/registros')
+            }, 2000);
+          },
+          autoClose: 500,
+        },
+
+      )
+    } else {
+      toast.error('¡Ha ocurrido un error!', {
+        autoClose: 500
+      })
+    }
   }
 
   function handleChange(e) {
@@ -195,15 +244,16 @@ const RegistroAutomatico = () => {
 
   function handleCancel() {
     setDatos(initialState)
+
   }
 
-  const alumnosOpc = alumnos 
-  ? alumnos.map(a => (
-    <option key={a._id} value={`${a.nombre}-${a.apellido}`}> {`${a.nombre} ${a.apellido}`}</option> //El guion entre el nombre y el apellido nos sirve para separarlos a la hora de enviar los datos
-  ))
-  : <option value="">----</option>
-  
-  const { fecha, alumno, oximetria, frecuencia, observaciones } = datos
+  const alumnosOpc = alumnos
+    ? alumnos.map(a => (
+      <option key={a._id} value={`${a.nombre}-${a.apellido}`}> {`${a.nombre} ${a.apellido}`}</option> //El guion entre el nombre y el apellido nos sirve para separarlos a la hora de enviar los datos
+    ))
+    : <option value="">----</option>
+
+  const { fecha, alumno, observaciones } = datos
 
 
   return (
@@ -226,13 +276,17 @@ const RegistroAutomatico = () => {
             </div>
           </div>
           {/* {contador == 50 ? ( */}
-          <div className='grid sm:grid-cols-2 gap-4 sm:gap-0 col-span-3'>
+          <div className='grid sm:grid-cols-2 gap-4 sm:gap-0 col-span-2'>
             <div className='text-center relative'>
               <BarraCircular id="oximetria" name="Oximetría" valor={spo2} />
             </div>
             <div className='text-center relative'>
               <BarraCircular id="frecuencia" name="Frecuencia Cardiaca" valor={bpm} />
             </div>
+          </div>
+
+          <div className='text-center relative'>
+            <BarraCircular id="temperatura" name="Temperatura" valor={temp}/>
           </div>
           {/* ) : (
             <div className='grid col-span-3'>
@@ -241,13 +295,9 @@ const RegistroAutomatico = () => {
               </div>
             </div>
           )} */}
-
-          {/* <div className='text-center relative'>
-            <BarraCircular id="temperatura" name="Temperatura" />
-          </div> */}
           <div className='text-center col-span-3'>
             <label htmlFor=''>Observaciones</label><br />
-            <textarea placeholder='Observaciones' className='form-input h-16 resize-none !text-justify w-5/6 styled-scrollbar' />
+            <textarea placeholder='Observaciones' className='form-input h-16 resize-none !text-justify w-5/6 styled-scrollbar' value={observaciones} name='observaciones' onChange={handleChange} />
           </div>
           <div className='col-span-3 text-center'>
             <button className='btn btn-red mx-4 !px-6 mt-5 sm:mt-0' onClick={handleCancel}>Cancelar</button>
@@ -255,6 +305,7 @@ const RegistroAutomatico = () => {
           </div>
 
         </form>
+        <ToastContainer theme={colorScheme} position="top-center" />
       </div>
     </>
   )
